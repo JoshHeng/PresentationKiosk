@@ -1,0 +1,22 @@
+.kiosk {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+.kiosk main {
+	display: grid;
+	flex-grow: 1;
+	grid-template-columns: auto 20rem;
+}
+.kiosk footer {
+	height: 7rem;
+}
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+
+	background-color: var(--sidebar-bg);
+	box-sizing: border-box;
+	border-left: 0.6rem solid var(--sidebar-border);
+}

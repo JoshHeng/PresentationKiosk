@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import Slides from './Slides';
+import Schedule from './Schedule';
+import WhatsNext from './WhatsNext';
+import BottomBar from './BottomBar';
+import styles from './App.module.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+		<div className={styles.kiosk}>
+			<main>
+				<Slides />
+				<div class={styles.sidebar}>
+					<div style={{ minHeight: '4rem' }}>
+						LOGO
+					</div>
+					<WhatsNext />
+					<Schedule />
+				</div>
+			</main>
+			<footer>
+				<BottomBar />
+			</footer>
+		</div>
+	);
 }
 
 export default App;

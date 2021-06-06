@@ -1,0 +1,8 @@
+.bottomBar {
+	background-color: var(--bottom-bar-bg);
+	height: 100%;
+
+	box-sizing: border-box;
+	border-top: 1rem solid;
+	border-image: var(--bottom-bar-border-image)
+}

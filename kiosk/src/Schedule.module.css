@@ -1,0 +1,4 @@
+.schedule {
+	background-color: var(--schedule-bg);
+	flex-grow: 1;
+}
