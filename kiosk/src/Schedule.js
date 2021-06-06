@@ -3,7 +3,7 @@ import styles from './Schedule.module.css';
 export default function Schedule() {
 	return (
 		<div className={styles.schedule}>
-			Schedule
+			<h2>Schedule</h2>
 		</div>
 	);
 }
