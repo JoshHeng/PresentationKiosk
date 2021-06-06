@@ -1,0 +1,36 @@
+.tweet {
+	background-color: #fff;
+	color: #161616;
+	padding: 0.5rem 1rem 0.6rem;
+	margin: 0.5rem;
+	font-family: 'Helvetica', 'Segoe UI', 'Helvetica Neue',
+}
+.tweetTop {
+	display: flex;
+	align-content: center;
+	font-size: 0.95em;
+}
+.tweetTop > svg {
+	margin-left: auto;
+	height: 1.5rem;
+}
+.tweetTop > div {
+	display: flex;
+	align-items: center;
+}
+.avatar {
+	height: 2.2rem;
+	border-radius: 50%;
+}
+.name {
+	font-weight: bold;
+	margin: 0 0 0 0.2rem;
+}
+.handle {
+	margin-left: 0.8rem;
+	color: #657786;
+}
+.tweet > p {
+	font-size: 1.1em;
+	margin: 0;
+}
