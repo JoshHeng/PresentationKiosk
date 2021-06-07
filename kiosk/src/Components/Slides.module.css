@@ -5,6 +5,7 @@
 	align-items: center;
 	
 	background-color: #efefef;
+	overflow: hidden;
 }
 .wheel {
 	position: absolute;
