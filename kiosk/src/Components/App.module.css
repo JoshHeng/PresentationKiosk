@@ -27,6 +27,7 @@ h2 {
 
 	box-sizing: border-box;
 	border-left: 0.6rem solid var(--sidebar-border);
+	z-index: 2;
 }
 .logo {
 	background-color: var(--logo-bg);

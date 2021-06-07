@@ -11,4 +11,30 @@
 	width: 25rem;
 	left: -12.5rem;
 	top: -12.5rem;
+	transition: transform .5s;
+	z-index: 5;
+}
+.slide {
+	left: 0;
+	right: 0;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: calc(100vh - 8rem);
+	width: 100%;
+
+	background-color: var(--slide-bg);
+	z-index: 1;
+
+	border-right: 2rem solid var(--slide-border);
+	box-sizing: content-box;
+
+	transition: left .5s;
+}
+.slide img {
+	max-width: 100%;
+	max-height: calc(100vh - 8rem);
+	object-fit: contain;
+	z-index: 1;
 }
