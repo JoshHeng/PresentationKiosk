@@ -1,7 +1,7 @@
 import Slides from './Slides';
-import Schedule from './Schedule';
-import WhatsNext from './WhatsNext';
-import BottomBar from './BottomBar';
+import Schedule from './Sidebar/Schedule';
+import WhatsNext from './Sidebar/WhatsNext';
+import BottomBar from './BottomBar/BottomBar';
 import styles from './App.module.css';
 
 function App() {
