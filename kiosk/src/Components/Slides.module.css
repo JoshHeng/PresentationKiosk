@@ -1,7 +1,14 @@
 .slides {
+	position: relative;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	
 	background-color: #efefef;
+}
+.wheel {
+	position: absolute;
+	width: 25rem;
+	left: -12.5rem;
+	top: -12.5rem;
 }

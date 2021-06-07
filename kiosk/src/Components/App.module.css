@@ -25,7 +25,13 @@ h2 {
 	flex-direction: column;
 	text-align: center;
 
-	background-color: var(--sidebar-bg);
 	box-sizing: border-box;
 	border-left: 0.6rem solid var(--sidebar-border);
+}
+.logo {
+	background-color: var(--logo-bg);
+}
+.logo img {
+	width: 16rem;
+	margin: 0.3rem;
 }

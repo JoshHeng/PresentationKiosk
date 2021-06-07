@@ -10,8 +10,8 @@ function App() {
 			<main>
 				<Slides />
 				<div class={styles.sidebar}>
-					<div style={{ minHeight: '4rem' }}>
-						LOGO
+					<div className={styles.logo}>
+						<img src="/images/logo.png" alt="Logo" />
 					</div>
 					<WhatsNext />
 					<Schedule />
