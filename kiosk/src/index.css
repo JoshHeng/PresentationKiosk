@@ -12,6 +12,10 @@ code {
 		monospace;
 }
 
+html {
+	font-size: 1.2vw;
+}
+
 :root {
 	--logo-bg: #595656;
 	--sidebar-border: #56C02B;

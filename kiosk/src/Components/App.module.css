@@ -14,10 +14,10 @@ h2 {
 .kiosk main {
 	display: grid;
 	flex-grow: 1;
-	grid-template-columns: auto 20rem;
+	grid-template-columns: auto 18rem;
 }
 .kiosk footer {
-	height: 7rem;
+	height: 8rem;
 }
 .sidebar {
 	color: white;
