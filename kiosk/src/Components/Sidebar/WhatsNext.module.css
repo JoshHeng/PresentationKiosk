@@ -10,4 +10,5 @@
 	font-size: 2.5em;
 	font-weight: bold;
 	height: 3.5rem;
+	transition: opacity 1s;
 }

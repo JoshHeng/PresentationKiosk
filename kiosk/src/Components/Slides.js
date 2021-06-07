@@ -50,12 +50,10 @@ export default function Slides() {
 				slides.push(existingSlides[0]);
 				return slides;
 			});
-		}, 2000);
+		}, 10000);
 
 		return () => clearInterval(rotator);
 	}, []);
-
-	console.log(activeSlides);
 
 	return (
 		<div className={styles.slides}>
