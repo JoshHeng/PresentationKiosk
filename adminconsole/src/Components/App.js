@@ -1,8 +1,13 @@
 import { Row, Col, Card, Button, Slider, Collapse, Space, InputNumber, Tabs, Table } from 'antd';
 import Slides from './Slides';
+import Login from './Login';
 import styles from './App.module.css';
 
+const loggedIn = true;
+
 function App() {
+	if (!loggedIn) return <Login />;
+
 	return (
 		<main style={{ padding: '1rem' }}>
 			<Row gutter={16}>
