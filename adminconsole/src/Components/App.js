@@ -16,18 +16,26 @@ function App() {
 			message.error('Disconnected from Server', 0);
 		});
 
-		socket.on('kiosk.connect', () => {
+		socket.on('kiosk.connected', () => {
 			message.success('Kiosk connected to Server', 0);
 		});
-		socket.on('kiosk.disconnect', () => {
+		socket.on('kiosk.disconnected', () => {
 			message.error('Kiosk disconnected from Server', 0);
+		});
+		socket.on('adminconsole.connected', () => {
+			message.success('Admin Console connected to Server', 15);
+		});
+		socket.on('adminconsole.disconnected', () => {
+			message.error('Admin Console disconnected from Server', 15);
 		});
 
 		return () => {
 			socket.off('connect');
 			socket.off('disconnect');
-			socket.off('kiosk.connect');
-			socket.off('kiosk.disconnect');
+			socket.off('kiosk.connected');
+			socket.off('kiosk.disconnected');
+			socket.off('adminconsole.connected');
+			socket.off('adminconsole.disconnected');
 		}
 	}, []);
 
