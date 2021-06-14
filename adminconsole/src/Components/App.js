@@ -1,11 +1,36 @@
-import { Row, Col, Card, Button, Slider, Collapse, Space, InputNumber, Tabs, Table } from 'antd';
+import { useEffect } from 'react';
+import { Row, Col, Card, Button, Slider, Collapse, Space, InputNumber, Tabs, message } from 'antd';
 import Slides from './Slides';
 import Login from './Login';
 import styles from './App.module.css';
+import socket from '../socket';
 
 const loggedIn = true;
 
 function App() {
+	useEffect(() => {
+		socket.on('connect', () => {
+			message.success('Connected to Server');
+		});
+		socket.on('disconnect', () => {
+			message.error('Disconnected from Server', 0);
+		});
+
+		socket.on('kiosk.connect', () => {
+			message.success('Kiosk connected to Server', 0);
+		});
+		socket.on('kiosk.disconnect', () => {
+			message.error('Kiosk disconnected from Server', 0);
+		});
+
+		return () => {
+			socket.off('connect');
+			socket.off('disconnect');
+			socket.off('kiosk.connect');
+			socket.off('kiosk.disconnect');
+		}
+	}, []);
+
 	if (!loggedIn) return <Login />;
 
 	return (

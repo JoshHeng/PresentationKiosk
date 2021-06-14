@@ -4,6 +4,7 @@ import WhatsNext from './Sidebar/WhatsNext';
 import BottomBar from './BottomBar/BottomBar';
 import Login from './Login';
 import styles from './App.module.css';
+import socket from '../socket';
 
 const loggedIn = true;
 
