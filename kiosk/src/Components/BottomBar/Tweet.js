@@ -1,5 +1,5 @@
 import styles from './Tweet.module.css';
-import TwitterIcon from '../../Resources/twitterIcon';
+import TwitterIcon from '../../resources/twitterIcon';
 
 const tweet = {
 	user: {
