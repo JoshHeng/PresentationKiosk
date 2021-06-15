@@ -8,19 +8,24 @@ import styles from './App.module.css';
 import socket from '../socket';
 
 function App() {
-	const [ loggedIn, setLoggedIn ] = useState(0);
+	const [ loggedIn, setLoggedIn ] = useState(1);
 
 	useEffect(() => {
-		if (localStorage.getItem('kioskpassword')) {
-			setLoggedIn(1);
-			socket.emit('login.kiosk', localStorage.getItem('kioskpassword'), success => {
-				if (success) setLoggedIn(2);
-				else {
-					setLoggedIn(0);
-					localStorage.removeItem('kioskpassword');
-				}
-			});
-		}
+		socket.on('connect', () => {
+			if (localStorage.getItem('kioskpassword')) {
+				setLoggedIn(1);
+				socket.emit('login.kiosk', localStorage.getItem('kioskpassword'), success => {
+					if (success) setLoggedIn(2);
+					else {
+						setLoggedIn(0);
+						localStorage.removeItem('kioskpassword');
+					}
+				});
+			}
+			else setLoggedIn(0);
+		});
+
+		return () => socket.off('connect');
 	}, []);
 
 	function attemptLogin(password) {
@@ -31,14 +36,13 @@ function App() {
 				localStorage.setItem('kioskpassword', password);
 			}
 			else {
-				setLoggedIn(0);
+				setLoggedIn(-1);
 				localStorage.removeItem('kioskpassword');
 			}
 		});
 	}
 
-	if (!loggedIn) return <Login attemptLogin />;
-	if (loggedIn === 1) return <p>Loading</p>
+	if (!loggedIn || loggedIn < 2) return <Login attemptLogin={attemptLogin} loading={loggedIn === 1} invalidCredentials={loggedIn === -1} />;
 
 	return (
 		<div className={styles.kiosk}>

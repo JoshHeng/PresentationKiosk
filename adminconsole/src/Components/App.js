@@ -1,37 +1,45 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Slider, Collapse, Space, InputNumber, Tabs, message } from 'antd';
 import Slides from './Slides';
 import Login from './Login';
-import styles from './App.module.css';
 import socket from '../socket';
 
-const loggedIn = true;
-
 function App() {
+	const [ loggedIn, setLoggedIn ] = useState(1);
+
 	useEffect(() => {
 		socket.on('connect', () => {
-			message.success('Connected to Server');
-		});
-		socket.on('disconnect', () => {
-			message.error('Disconnected from Server', 0);
+			if (localStorage.getItem('adminconsolepassword')) {
+				setLoggedIn(1);
+				socket.emit('login.adminconsole', localStorage.getItem('adminconsolepassword'), success => {
+					if (success) {
+						setLoggedIn(2);
+						message.success('Connected to Server');
+					}
+					else {
+						setLoggedIn(0);
+						localStorage.removeItem('adminconsolepassword');
+					}
+				});
+			}
+			else setLoggedIn(0);
 		});
 
 		socket.on('kiosk.connected', () => {
-			message.success('Kiosk connected to Server', 0);
+			message.success('Kiosk connected to Server');
 		});
 		socket.on('kiosk.disconnected', () => {
-			message.error('Kiosk disconnected from Server', 0);
+			message.error('Kiosk disconnected from Server');
 		});
 		socket.on('adminconsole.connected', () => {
-			message.success('Admin Console connected to Server', 15);
+			message.success('Admin Console connected to Server');
 		});
 		socket.on('adminconsole.disconnected', () => {
-			message.error('Admin Console disconnected from Server', 15);
+			message.error('Admin Console disconnected from Server');
 		});
 
 		return () => {
 			socket.off('connect');
-			socket.off('disconnect');
 			socket.off('kiosk.connected');
 			socket.off('kiosk.disconnected');
 			socket.off('adminconsole.connected');
@@ -39,7 +47,33 @@ function App() {
 		}
 	}, []);
 
-	if (!loggedIn) return <Login />;
+	useEffect(() => {
+		if (loggedIn === 2) {
+			socket.on('disconnect', () => {
+				if (loggedIn === 2) message.error('Disconnected from Server', 0);
+			});
+		}
+		
+		return () => socket.off('disconnect');
+	}, [loggedIn])
+
+	function attemptLogin(password) {
+		setLoggedIn(1);
+		socket.emit('login.adminconsole', password, success => {
+			if (success) {
+				setLoggedIn(2);
+				message.success('Connected to Server');
+				localStorage.setItem('adminconsolepassword', password);
+			}
+			else {
+				setLoggedIn(-1);
+				message.error('Invalid password');
+				localStorage.removeItem('adminconsolepassword');
+			}
+		});
+	}
+
+	if (!loggedIn || loggedIn < 2) return <Login attemptLogin={attemptLogin} loading={loggedIn === 1} invalidCredentials={loggedIn === -1} />;
 
 	return (
 		<main style={{ padding: '1rem' }}>
