@@ -1,0 +1,40 @@
+{
+	"slides": {
+		"definitions": {
+			"1": {
+				"src": "https://www.havenresorts.com/uploads/9/8/7/9/98799368/published/16-9placeholder_59.png",
+				"description": "Placeholder"
+			},
+			"2": {
+				"src": "https://www.clevertech-group.com/assets/img/placeholder/16x9.jpg",
+				"description": "Placeholder 2"
+			},
+			"3": {
+				"src": "https://randomfox.ca/images/66.jpg",
+				"description": "Fox 1"
+			},
+			"4": {
+				"src": "https://randomfox.ca/images/20.jpg",
+				"description": "Fox 2"
+			},
+			"5": {
+				"src": "https://randomfox.ca/images/30.jpg",
+				"description": "Fox 3"
+			},
+			"6": {
+				"src": "https://randomfox.ca/images/40.jpg",
+				"description": "Fox 4"
+			}
+		},
+		"queues": {
+			"main": {
+				"items": ["1", "2", "queue.foxes"],
+				"position": 0
+			},
+			"foxes": {
+				"items": ["4", "5", "3", "6"],
+				"position": 1
+			}
+		}
+	}
+}
