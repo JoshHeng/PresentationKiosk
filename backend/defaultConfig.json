@@ -33,7 +33,53 @@
 			},
 			"foxes": {
 				"items": ["4", "5", "3", "6"],
-				"position": 1
+				"position": 0
+			}
+		},
+		"duration": 5000
+	},
+	"bottombar": {
+		"definitions": {
+			"1": {
+				"type": "twitter",
+				"tweet": "Really excited for this one - join us for a superb talk. #YouthSTEMMattersConf",
+				"author": {
+					"name": "Annerb",
+					"username": "annerb",
+					"avatar": "https://pbs.twimg.com/profile_images/1118209723386466309/-dzSF-ax_400x400.jpg"
+				}
+			},
+			"2": {
+				"type": "twitter",
+				"tweet": "Thanks a lot @YouthSTEM2030 for the opportunity to be a speaker. Join in on 19 June to watch.",
+				"author": {
+					"name": "Eric Mujjona",
+					"username": "EMujjona",
+					"avatar": "https://pbs.twimg.com/profile_images/1397068497549729795/fLDirmix_400x400.jpg"
+				}
+			},
+			"3": {
+				"type": "twitter",
+				"tweet": "We're pleased to support Youth STEM Matters (@YouthSTEM2030)'s first ever Research Conference⁠ Confetti ball",
+				"author": {
+					"name": "James Hutton Institute",
+					"username": "JamesHuttonInst",
+					"avatar": "https://pbs.twimg.com/profile_images/460775316764368898/td-BqrDU_400x400.jpeg"
+				}
+			},
+			"4": {
+				"type": "blank",
+				"description": "Blank"
+			}
+		},
+		"queues": {
+			"main": {
+				"items": ["4", "queue.tweets"],
+				"position": 0
+			},
+			"tweets": {
+				"items": ["1", "2", "3"],
+				"position": 0
 			}
 		},
 		"duration": 5000

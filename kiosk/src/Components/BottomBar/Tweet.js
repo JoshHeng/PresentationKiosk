@@ -10,14 +10,16 @@ const tweet = {
 	tweet: "Welcome to the Research Conference! #YouthSTEMMattersResearchConf"
 };
 
-export default function Tweet() {
+export default function Tweet({ tweetData }) {
+	if (!tweetData || !tweetData.author) return <p>Bad</p>;
+
 	return (
 		<div className={styles.tweet}>
 			<div className={styles.tweetTop}>
 				<div>
-					<img className={styles.avatar} src={tweet.user.avatar} alt="Twitter Avatar" />
-					<p className={styles.name}>{tweet.user.name}</p>
-					<span className={styles.handle}>{tweet.user.handle}</span>
+					<img className={styles.avatar} src={tweet.author.avatar} alt="Twitter Avatar" />
+					<p className={styles.name}>{tweet.author.name}</p>
+					<span className={styles.handle}>{tweet.author.username}</span>
 				</div>
 				<TwitterIcon />
 			</div>

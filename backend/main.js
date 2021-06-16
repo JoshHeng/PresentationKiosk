@@ -19,6 +19,7 @@ const config = JSON.parse(fs.readFileSync('./config.json'));
 
 var currentAbsoluteSlidePosition = 0;
 var advanceSlideTimeout = null;
+var advanceBottomBarTimeout = null;
 
 function saveConfig() {
 	fs.writeFileSync('./config.json', JSON.stringify(config, null, 2));
@@ -44,7 +45,7 @@ function getSlideQueueRelativeKey(queue, relativePosition) {
 	
 	return queue.items[position];
 }
-function getSlideRelativeQueue(start, end) {
+function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 	if (end < start) return [];
 	if (end < 0) end = 0;
 
@@ -55,16 +56,16 @@ function getSlideRelativeQueue(start, end) {
 	if (currentPosition <= 0) {
 		currentPosition = 0;
 		while (currentPosition >= start) {
-			const slideKey = getSlideQueueRelativeKey(config.slides.queues.main, currentPosition);
+			const slideKey = getSlideQueueRelativeKey(config[slideSet].queues.main, currentPosition);
 			if (slideKey.startsWith('queue.')) {
 				const queueKey = slideKey.slice(6);
-				const subSlideKey = getSlideQueueRelativeKey(config.slides.queues[queueKey], queuePositionModifiers[queueKey] || -1);
-				const subSlide = config.slides.definitions[subSlideKey];
+				const subSlideKey = getSlideQueueRelativeKey(config[slideSet].queues[queueKey], queuePositionModifiers[queueKey] || -1);
+				const subSlide = config[slideSet].definitions[subSlideKey];
 				slides.unshift({ id: subSlideKey, position: currentAbsoluteSlidePosition + currentPosition, ...subSlide });
 				queuePositionModifiers[queueKey] = (queuePositionModifiers[queueKey] || -1) - 1;
 			}
 			else {
-				const slide = config.slides.definitions[slideKey];
+				const slide = config[slideSet].definitions[slideKey];
 				slides.unshift({ id: slideKey, position: currentAbsoluteSlidePosition + currentPosition, ...slide });
 			}
 
@@ -76,16 +77,16 @@ function getSlideRelativeQueue(start, end) {
 	
 	queuePositionModifiers = {};
 	while (currentPosition <= end) {
-		const slideKey = getSlideQueueRelativeKey(config.slides.queues.main, currentPosition);
+		const slideKey = getSlideQueueRelativeKey(config[slideSet].queues.main, currentPosition);
 		if (slideKey.startsWith('queue.')) {
 			const queueKey = slideKey.slice(6);
-			const subSlideKey = getSlideQueueRelativeKey(config.slides.queues[queueKey], queuePositionModifiers[queueKey] || 0);
-			const subSlide = config.slides.definitions[subSlideKey];
+			const subSlideKey = getSlideQueueRelativeKey(config[slideSet].queues[queueKey], queuePositionModifiers[queueKey] || 0);
+			const subSlide = config[slideSet].definitions[subSlideKey];
 			slides.push({ id: subSlideKey, position: currentAbsoluteSlidePosition + currentPosition, ...subSlide });
 			queuePositionModifiers[queueKey] = (queuePositionModifiers[queueKey] || 0) + 1;
 		}
 		else {
-			const slide = config.slides.definitions[slideKey];
+			const slide = config[slideSet].definitions[slideKey];
 			slides.push({ id: slideKey, position: currentAbsoluteSlidePosition + currentPosition, ...slide });
 		}
 		
@@ -98,53 +99,60 @@ function getSlideRelativeQueue(start, end) {
 function updateKioskSlides() {
 	io.to('kiosk').emit('slides.set', getSlideRelativeQueue(-1, 1));
 }
+function updateBottombarSlides() {
+	io.to('kiosk').emit('bottombar.set', getSlideRelativeQueue(-1, 1, 'bottombar'));
+}
 
-function advanceSlide() {
+function advanceSlide(slideSet = 'slides') {
 	if (advanceSlideTimeout) clearTimeout(advanceSlideTimeout);
 
-	const currentSlideKey = config.slides.queues.main.items[config.slides.queues.main.position];
+	const currentSlideKey = config[slideSet].queues.main.items[config[slideSet].queues.main.position];
 	if (currentSlideKey.startsWith('queue.')) {
 		const queueKey = currentSlideKey.slice(6);
 
-		config.slides.queues[queueKey].position += 1;
-		if (config.slides.queues[queueKey].position >= config.slides.queues[queueKey].items.length) config.slides.queues[queueKey].position = 0;
+		config[slideSet].queues[queueKey].position += 1;
+		if (config[slideSet].queues[queueKey].position >= config[slideSet].queues[queueKey].items.length) config[slideSet].queues[queueKey].position = 0;
 	}
 
-	config.slides.queues.main.position += 1;
-	if (config.slides.queues.main.position >= config.slides.queues.main.items.length) config.slides.queues.main.position = 0;
+	config[slideSet].queues.main.position += 1;
+	if (config[slideSet].queues.main.position >= config[slideSet].queues.main.items.length) config[slideSet].queues.main.position = 0;
 
 	currentAbsoluteSlidePosition += 1;
 
 	saveConfig();
 
-	updateKioskSlides();
+	if (slideSet === 'bottombar') updateBottombarSlides();
+	else updateKioskSlides();
 
-	advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
+	advanceSlideTimeout = setTimeout(advanceSlide, config[slideSet].duration);
 }
 advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
+advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), config.bottombar.duration);
 
+function previousSlide(slideSet = 'slides') {
+	if (slideSet === 'slides' && advanceSlideTimeout) clearTimeout(advanceSlideTimeout);
+	else if (slideSet === 'bottombar' && advanceBottomBarTimeout) clearTimeout(advanceBottomBarTimeout);
 
-function previousSlide() {
-	if (advanceSlideTimeout) clearTimeout(advanceSlideTimeout);
-
-	const currentSlideKey = config.slides.queues.main.items[config.slides.queues.main.position];
+	const currentSlideKey = confi[slideSet].queues.main.items[config[slideSet].queues.main.position];
 	if (currentSlideKey.startsWith('queue.')) {
 		const queueKey = currentSlideKey.slice(6);
 
-		config.slides.queues[queueKey].position -= 1;
-		if (config.slides.queues[queueKey].position < 0) config.slides.queues[queueKey].position = config.slides.queues[queueKey].items.length - 1;
+		config[slideSet].queues[queueKey].position -= 1;
+		if (config[slideSet].queues[queueKey].position < 0) config[slideSet].queues[queueKey].position = config[slideSet].queues[queueKey].items.length - 1;
 	}
 
-	config.slides.queues.main.position -= 1;
-	if (config.slides.queues.main.position < 0) config.slides.queues.main.position = config.slides.queues.main.items.length - 1;
+	config[slideSet].queues.main.position -= 1;
+	if (config[slideSet].queues.main.position < 0) config[slideSet].queues.main.position = config[slideSet].queues.main.items.length - 1;
 
 	currentAbsoluteSlidePosition -= 1;
 
 	saveConfig();
 
-	updateKioskSlides();
+	if (slideSet === 'bottombar') updateBottombarSlides();
+	else updateKioskSlides();
 
-	advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
+	if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), config[slideSet].duration);
+	else advanceSlideTimeout = setTimeout(advanceSlide, config[slideSet].duration);
 }
 
 io.on("connection", socket => {
@@ -159,6 +167,7 @@ io.on("connection", socket => {
 			console.log('Kiosk connected');
 
 			socket.on('slides.request', () => socket.emit('slides.set', getSlideRelativeQueue(-1, 1)));
+			socket.on('bottombar.request', () => socket.emit('bottombar.set', getSlideRelativeQueue(-1, 1, 'bottombar')));
 
 			return callback(true);
 		}
@@ -172,8 +181,10 @@ io.on("connection", socket => {
 			socket.broadcast.to('adminconsole').emit('adminconsole.connected');
 			console.log('Admin Console connected');
 
-			socket.on('slides.advance', advanceSlide);
-			socket.on('slides.previous', previousSlide);
+			socket.on('slides.next', () => advanceSlide());
+			socket.on('slides.previous', () => previousSlide());
+			socket.on('bottombar.next', () => advanceSlide('bottombar'));
+			socket.on('bottombar.previous', () => previousSlide('bottombar'));
 
 			return callback(true);
 		}

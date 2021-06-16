@@ -1,7 +1,7 @@
 import { Table, Image, Space, Button, InputNumber } from 'antd';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { MenuOutlined } from '@ant-design/icons';
-import styles from './Slides.module.css';
+import styles from './SlidesPreview.module.css';
 import socket from '../socket';
 
 const slides = [
@@ -39,7 +39,7 @@ export default function Slides() {
 		socket.emit('slides.previous');
 	}
 	function onAdvanceSlide() {
-		socket.emit('slides.advance');
+		socket.emit('slides.next');
 	}
 
 	return (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Slider, Collapse, Space, InputNumber, Tabs, message } from 'antd';
-import Slides from './Slides';
+import SlidesPreview from './SlidesPreview';
 import Login from './Login';
 import socket from '../socket';
 
@@ -113,15 +113,10 @@ function App() {
 				<Col span={12}>
 					<Tabs defaultActiveKey="slides">
 						<Tabs.TabPane tab="Slides" key="slides">
-							<Slides />
+							<SlidesPreview />
 						</Tabs.TabPane>
 						<Tabs.TabPane tab="Bottom Bar" key="bar">
-							<div>
-								<Space>
-									<Button>Previous Item</Button>
-									<Button type="primary">Next Item</Button>
-								</Space>
-							</div>
+							<SlidesPreview type="bottombar" />
 						</Tabs.TabPane>
 					</Tabs>
 				</Col>
