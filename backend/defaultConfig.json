@@ -83,5 +83,10 @@
 			}
 		},
 		"duration": 5000
+	},
+	"schedule": {
+		"events": {
+			
+		}
 	}
 }
