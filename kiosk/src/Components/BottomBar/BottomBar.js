@@ -9,8 +9,8 @@ export default function BottomBar() {
 	useEffect(() => {
 		socket.on('bottombar.set', slides => {
 			setActiveSlides(slides);
+			console.log(slides);
 		});
-
 		socket.emit('bottombar.request');
 
 		return () => socket.off('bottombar.set');

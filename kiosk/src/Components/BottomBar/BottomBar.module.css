@@ -6,4 +6,9 @@
 	border-top: 1rem solid;
 	border-image: var(--bottom-bar-border-image);
 	z-index: 3;
+	position: relative;
+}
+.bottomBar > div {
+	position: absolute;
+	transition: 1s opacity;
 }

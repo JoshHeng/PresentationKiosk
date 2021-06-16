@@ -18,6 +18,7 @@ if (!fs.existsSync('./config.json')) fs.copyFileSync('./defaultConfig.json', './
 const config = JSON.parse(fs.readFileSync('./config.json'));
 
 var currentAbsoluteSlidePosition = 0;
+var currentAbsoluteBottomBarPosition = 0;
 var advanceSlideTimeout = null;
 var advanceBottomBarTimeout = null;
 
@@ -51,6 +52,7 @@ function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 
 	let currentPosition = start;
 	const slides = [];
+	const currentAbsolutePosition = slideSet === 'bottombar' ? currentAbsoluteBottomBarPosition : currentAbsoluteSlidePosition;
 	let queuePositionModifiers = {};
 	
 	if (currentPosition <= 0) {
@@ -59,14 +61,14 @@ function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 			const slideKey = getSlideQueueRelativeKey(config[slideSet].queues.main, currentPosition);
 			if (slideKey.startsWith('queue.')) {
 				const queueKey = slideKey.slice(6);
-				const subSlideKey = getSlideQueueRelativeKey(config[slideSet].queues[queueKey], queuePositionModifiers[queueKey] || -1);
+				const subSlideKey = getSlideQueueRelativeKey(config[slideSet].queues[queueKey], queuePositionModifiers[queueKey] || (currentPosition === 0 ? 0 : -1));
 				const subSlide = config[slideSet].definitions[subSlideKey];
-				slides.unshift({ id: subSlideKey, position: currentAbsoluteSlidePosition + currentPosition, ...subSlide });
-				queuePositionModifiers[queueKey] = (queuePositionModifiers[queueKey] || -1) - 1;
+				slides.unshift({ id: subSlideKey, position: currentAbsolutePosition + currentPosition, ...subSlide });
+				queuePositionModifiers[queueKey] = (queuePositionModifiers[queueKey] || (currentPosition === 0 ? 0 : -1)) - 1;
 			}
 			else {
 				const slide = config[slideSet].definitions[slideKey];
-				slides.unshift({ id: slideKey, position: currentAbsoluteSlidePosition + currentPosition, ...slide });
+				slides.unshift({ id: slideKey, position: currentAbsolutePosition + currentPosition, ...slide });
 			}
 
 			currentPosition -= 1;
@@ -82,12 +84,12 @@ function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 			const queueKey = slideKey.slice(6);
 			const subSlideKey = getSlideQueueRelativeKey(config[slideSet].queues[queueKey], queuePositionModifiers[queueKey] || 0);
 			const subSlide = config[slideSet].definitions[subSlideKey];
-			slides.push({ id: subSlideKey, position: currentAbsoluteSlidePosition + currentPosition, ...subSlide });
+			slides.push({ id: subSlideKey, position: currentAbsolutePosition + currentPosition, ...subSlide });
 			queuePositionModifiers[queueKey] = (queuePositionModifiers[queueKey] || 0) + 1;
 		}
 		else {
 			const slide = config[slideSet].definitions[slideKey];
-			slides.push({ id: slideKey, position: currentAbsoluteSlidePosition + currentPosition, ...slide });
+			slides.push({ id: slideKey, position: currentAbsolutePosition + currentPosition, ...slide });
 		}
 		
 		currentPosition += 1;
@@ -117,7 +119,8 @@ function advanceSlide(slideSet = 'slides') {
 	config[slideSet].queues.main.position += 1;
 	if (config[slideSet].queues.main.position >= config[slideSet].queues.main.items.length) config[slideSet].queues.main.position = 0;
 
-	currentAbsoluteSlidePosition += 1;
+	if (slideSet === 'bottombar') currentAbsoluteBottomBarPosition += 1;
+	else currentAbsoluteSlidePosition += 1;
 
 	saveConfig();
 
@@ -144,7 +147,8 @@ function previousSlide(slideSet = 'slides') {
 	config[slideSet].queues.main.position -= 1;
 	if (config[slideSet].queues.main.position < 0) config[slideSet].queues.main.position = config[slideSet].queues.main.items.length - 1;
 
-	currentAbsoluteSlidePosition -= 1;
+	if (slideSet === 'bottombar') currentAbsoluteBottomBarPosition -= 1;
+	else currentAbsoluteSlidePosition -= 1;
 
 	saveConfig();
 

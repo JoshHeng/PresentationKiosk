@@ -41,7 +41,7 @@
 	"bottombar": {
 		"definitions": {
 			"1": {
-				"type": "twitter",
+				"type": "tweet",
 				"tweet": "Really excited for this one - join us for a superb talk. #YouthSTEMMattersConf",
 				"author": {
 					"name": "Annerb",
@@ -50,7 +50,7 @@
 				}
 			},
 			"2": {
-				"type": "twitter",
+				"type": "tweet",
 				"tweet": "Thanks a lot @YouthSTEM2030 for the opportunity to be a speaker. Join in on 19 June to watch.",
 				"author": {
 					"name": "Eric Mujjona",
@@ -59,7 +59,7 @@
 				}
 			},
 			"3": {
-				"type": "twitter",
+				"type": "tweet",
 				"tweet": "We're pleased to support Youth STEM Matters (@YouthSTEM2030)'s first ever Research Conference⁠ Confetti ball",
 				"author": {
 					"name": "James Hutton Institute",

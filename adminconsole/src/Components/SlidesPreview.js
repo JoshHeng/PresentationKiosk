@@ -34,12 +34,14 @@ function DraggableBodyRow(props) {
 }
 
 
-export default function Slides() {
+export default function Slides({ type }) {
 	function onPreviousSlide() {
-		socket.emit('slides.previous');
+		if (type === 'bottombar') socket.emit('bottombar.previous');
+		else socket.emit('slides.previous');
 	}
 	function onAdvanceSlide() {
-		socket.emit('slides.next');
+		if (type === 'bottombar') socket.emit('bottombar.next');
+		else socket.emit('slides.next');
 	}
 
 	return (

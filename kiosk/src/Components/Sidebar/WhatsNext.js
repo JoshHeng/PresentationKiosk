@@ -12,7 +12,6 @@ export default function WhatsNext() {
 		}
 		updateTime();
 	}, []);
-	console.log(secondsRemaining);
 
 	return (
 		<div className={styles.whatsNext}>
