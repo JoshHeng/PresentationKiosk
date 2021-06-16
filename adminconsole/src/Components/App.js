@@ -113,16 +113,6 @@ function App() {
 				<Col span={12}>
 					<Tabs defaultActiveKey="slides">
 						<Tabs.TabPane tab="Slides" key="slides">
-							<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-								<Space>
-									<Button>Previous Slide</Button>
-									<Button type="primary">Next Slide</Button>
-								</Space>
-								<div>
-									<label style={{ marginRight: '0.5rem' }}>Slide Duration (s)</label>
-									<InputNumber />
-								</div>
-							</div>
 							<Slides />
 						</Tabs.TabPane>
 						<Tabs.TabPane tab="Bottom Bar" key="bar">

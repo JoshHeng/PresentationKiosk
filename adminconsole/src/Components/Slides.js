@@ -1,7 +1,8 @@
-import { Table, Image } from 'antd';
+import { Table, Image, Space, Button, InputNumber } from 'antd';
 import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
 import { MenuOutlined } from '@ant-design/icons';
 import styles from './Slides.module.css';
+import socket from '../socket';
 
 const slides = [
 	{
@@ -34,15 +35,34 @@ function DraggableBodyRow(props) {
 
 
 export default function Slides() {
+	function onPreviousSlide() {
+		socket.emit('slides.previous');
+	}
+	function onAdvanceSlide() {
+		socket.emit('slides.advance');
+	}
+
 	return (
-		<Table rowKey="id" dataSource={slides} pagination={false} components={{ body: {
-			wrapper: DraggableContainer,
-			row: DraggableBodyRow
-		}}}>
-			<Table.Column title="Sort" dataIndex="sort" width={30} render={() => <DragHandle />} className={styles.dragVisible} />
-			<Table.Column title="Slide" dataIndex="src" width="10rem" render={val => <Image src={val} alt="Slide Image" width="10rem" />} className={styles.dragVisible} />
-			<Table.Column title="Title" dataIndex="title" key="title" />
-			<Table.Column title="ID" dataIndex="id" />
-		</Table>
-	)
+		<>
+			<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
+				<Space>
+					<Button onClick={onPreviousSlide}>Previous Slide</Button>
+					<Button type="primary" onClick={onAdvanceSlide}>Next Slide</Button>
+				</Space>
+				<div>
+					<label style={{ marginRight: '0.5rem' }}>Slide Duration (s)</label>
+					<InputNumber />
+				</div>
+			</div>
+			<Table rowKey="id" dataSource={slides} pagination={false} components={{ body: {
+				wrapper: DraggableContainer,
+				row: DraggableBodyRow
+			}}}>
+				<Table.Column title="Sort" dataIndex="sort" width={30} render={() => <DragHandle />} className={styles.dragVisible} />
+				<Table.Column title="Slide" dataIndex="src" width="10rem" render={val => <Image src={val} alt="Slide Image" width="10rem" />} className={styles.dragVisible} />
+				<Table.Column title="Title" dataIndex="title" key="title" />
+				<Table.Column title="ID" dataIndex="id" />
+			</Table>
+		</>
+	);
 }

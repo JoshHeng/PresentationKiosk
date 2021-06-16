@@ -18,6 +18,7 @@ if (!fs.existsSync('./config.json')) fs.copyFileSync('./defaultConfig.json', './
 const config = JSON.parse(fs.readFileSync('./config.json'));
 
 var currentAbsoluteSlidePosition = 0;
+var advanceSlideTimeout = null;
 
 function saveConfig() {
 	fs.writeFileSync('./config.json', JSON.stringify(config, null, 2));
@@ -94,25 +95,57 @@ function getSlideRelativeQueue(start, end) {
 	return slides;
 }
 
-/*function getCurrentSlide() {
-	const currentItemIndex = config.slides.queues.main.position;
-	const currentItemKey = config.slides.queue.main.queue[currentItemIndex];
-
-	if (currentItemName.startsWith('queue.')) return; //todo
-	
-	const currentSlide = config.slides.definitions[currentItemKey];
-
-	return {
-		slide: currentSlide
-	}
+function updateKioskSlides() {
+	io.to('kiosk').emit('slides.set', getSlideRelativeQueue(-1, 1));
 }
-function advanceSlide() {
-	config.slides.queues.main.position += 1;
-	if (config.slides.main.position >= config.slides.main.queue.length) config.slides.queues.main.position = 0;
 
-	const { slide } = getCurrentSlide();
-	socket.to('kiosk').emit('slide.set', )
-}*/
+function advanceSlide() {
+	if (advanceSlideTimeout) clearTimeout(advanceSlideTimeout);
+
+	const currentSlideKey = config.slides.queues.main.items[config.slides.queues.main.position];
+	if (currentSlideKey.startsWith('queue.')) {
+		const queueKey = currentSlideKey.slice(6);
+
+		config.slides.queues[queueKey].position += 1;
+		if (config.slides.queues[queueKey].position >= config.slides.queues[queueKey].items.length) config.slides.queues[queueKey].position = 0;
+	}
+
+	config.slides.queues.main.position += 1;
+	if (config.slides.queues.main.position >= config.slides.queues.main.items.length) config.slides.queues.main.position = 0;
+
+	currentAbsoluteSlidePosition += 1;
+
+	saveConfig();
+
+	updateKioskSlides();
+
+	advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
+}
+advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
+
+
+function previousSlide() {
+	if (advanceSlideTimeout) clearTimeout(advanceSlideTimeout);
+
+	const currentSlideKey = config.slides.queues.main.items[config.slides.queues.main.position];
+	if (currentSlideKey.startsWith('queue.')) {
+		const queueKey = currentSlideKey.slice(6);
+
+		config.slides.queues[queueKey].position -= 1;
+		if (config.slides.queues[queueKey].position < 0) config.slides.queues[queueKey].position = config.slides.queues[queueKey].items.length - 1;
+	}
+
+	config.slides.queues.main.position -= 1;
+	if (config.slides.queues.main.position < 0) config.slides.queues.main.position = config.slides.queues.main.items.length - 1;
+
+	currentAbsoluteSlidePosition -= 1;
+
+	saveConfig();
+
+	updateKioskSlides();
+
+	advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
+}
 
 io.on("connection", socket => {
 	console.log('Connection Established');
@@ -125,6 +158,8 @@ io.on("connection", socket => {
 			socket.broadcast.to('adminconsole').emit('kiosk.connected');
 			console.log('Kiosk connected');
 
+			socket.on('slides.request', () => socket.emit('slides.set', getSlideRelativeQueue(-1, 1)));
+
 			return callback(true);
 		}
 		else return callback(false);
@@ -136,6 +171,9 @@ io.on("connection", socket => {
 
 			socket.broadcast.to('adminconsole').emit('adminconsole.connected');
 			console.log('Admin Console connected');
+
+			socket.on('slides.advance', advanceSlide);
+			socket.on('slides.previous', previousSlide);
 
 			return callback(true);
 		}
