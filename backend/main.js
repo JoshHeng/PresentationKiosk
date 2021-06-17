@@ -63,12 +63,12 @@ function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 				const queueKey = slideKey.slice(6);
 				const subSlideKey = getSlideQueueRelativeKey(config[slideSet].queues[queueKey], queuePositionModifiers[queueKey] || (currentPosition === 0 ? 0 : -1));
 				const subSlide = config[slideSet].definitions[subSlideKey];
-				slides.unshift({ id: subSlideKey, position: currentAbsolutePosition + currentPosition, ...subSlide });
+				slides.unshift({ id: subSlideKey, duration: (subSlide.duration || config[slideSet].queues[queueKey].duration || config[slideSet].duration), durationType: subSlide.duration ? 'slide' : (config[slideSet].queues[queueKey].duration ? 'queue' : 'default'), queue: queueKey, position: currentAbsolutePosition + currentPosition, ...subSlide });
 				queuePositionModifiers[queueKey] = (queuePositionModifiers[queueKey] || (currentPosition === 0 ? 0 : -1)) - 1;
 			}
 			else {
 				const slide = config[slideSet].definitions[slideKey];
-				slides.unshift({ id: slideKey, position: currentAbsolutePosition + currentPosition, ...slide });
+				slides.unshift({ id: slideKey, duration: (slide.duration || config[slideSet].duration), durationType: slide.duration ? 'slide' : 'default', position: currentAbsolutePosition + currentPosition, ...slide });
 			}
 
 			currentPosition -= 1;
@@ -84,12 +84,12 @@ function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 			const queueKey = slideKey.slice(6);
 			const subSlideKey = getSlideQueueRelativeKey(config[slideSet].queues[queueKey], queuePositionModifiers[queueKey] || 0);
 			const subSlide = config[slideSet].definitions[subSlideKey];
-			slides.push({ id: subSlideKey, position: currentAbsolutePosition + currentPosition, ...subSlide });
+			slides.push({ id: subSlideKey, duration: (subSlide.duration || config[slideSet].queues[queueKey].duration || config[slideSet].duration), durationType: subSlide.duration ? 'slide' : (config[slideSet].queues[queueKey].duration ? 'queue' : 'default'), queue: queueKey, position: currentAbsolutePosition + currentPosition, ...subSlide });
 			queuePositionModifiers[queueKey] = (queuePositionModifiers[queueKey] || 0) + 1;
 		}
 		else {
 			const slide = config[slideSet].definitions[slideKey];
-			slides.push({ id: slideKey, position: currentAbsolutePosition + currentPosition, ...slide });
+			slides.push({ id: slideKey, duration: (slide.duration || config[slideSet].duration), durationType: slide.duration ? 'slide' : 'default', position: currentAbsolutePosition + currentPosition, ...slide });
 		}
 		
 		currentPosition += 1;
@@ -108,7 +108,10 @@ function updateBottombarSlides() {
 }
 
 function advanceSlide(slideSet = 'slides') {
-	if (advanceSlideTimeout) clearTimeout(advanceSlideTimeout);
+	if (advanceSlideTimeout) {
+		clearTimeout(advanceSlideTimeout);
+		advanceSlideTimeout = null;
+	}
 
 	const currentSlideKey = config[slideSet].queues.main.items[config[slideSet].queues.main.position];
 	if (currentSlideKey.startsWith('queue.')) {
@@ -129,14 +132,23 @@ function advanceSlide(slideSet = 'slides') {
 	if (slideSet === 'bottombar') updateBottombarSlides();
 	else updateKioskSlides();
 
-	advanceSlideTimeout = setTimeout(advanceSlide, config[slideSet].duration);
+	if (!config[slideSet].paused) {
+		const currentSlide = getSlideRelativeQueue(0, 0, slideSet)[0];
+		advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
+	}
 }
-advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
-advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), config.bottombar.duration);
+if (!config.slides.paused) advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
+if (!config.bottombar.paused) advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), config.bottombar.duration);
 
 function previousSlide(slideSet = 'slides') {
-	if (slideSet === 'slides' && advanceSlideTimeout) clearTimeout(advanceSlideTimeout);
-	else if (slideSet === 'bottombar' && advanceBottomBarTimeout) clearTimeout(advanceBottomBarTimeout);
+	if (slideSet === 'slides' && advanceSlideTimeout) {
+		clearTimeout(advanceSlideTimeout);
+		advanceSlideTimeout = null;
+	}
+	else if (slideSet === 'bottombar' && advanceBottomBarTimeout) {
+		clearTimeout(advanceBottomBarTimeout);
+		advanceSlideTimeout = null;
+	}
 
 	const currentSlideKey = config[slideSet].queues.main.items[config[slideSet].queues.main.position];
 	if (currentSlideKey.startsWith('queue.')) {
@@ -157,8 +169,12 @@ function previousSlide(slideSet = 'slides') {
 	if (slideSet === 'bottombar') updateBottombarSlides();
 	else updateKioskSlides();
 
-	if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), config[slideSet].duration);
-	else advanceSlideTimeout = setTimeout(advanceSlide, config[slideSet].duration);
+	if (!config[slideSet].paused) {
+		const currentSlide = getSlideRelativeQueue(0, 0, slideSet)[0];
+
+		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), currentSlide.duration);
+		else advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
+	}
 }
 
 function nextSong() {

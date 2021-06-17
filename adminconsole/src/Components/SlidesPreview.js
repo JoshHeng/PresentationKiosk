@@ -35,7 +35,7 @@ function BottomBarSlideContent({ item }) {
 
 function SlideTable({ type, slides }) {
 	if (type === 'bottombar') return (
-		<Table rowKey="position" dataSource={slides} pagination={false}>
+		<Table rowKey="position" dataSource={slides} pagination={false} locale={{ emptyText: 'Loading/None' }}>
 			<Table.Column title="Content" dataIndex="content" render={(val, item) => <BottomBarSlideContent item={item} />} />
 			<Table.Column title="Type" dataIndex="type" render={val => <BottomBarTag type={val} />} />
 			<Table.Column title="ID" dataIndex="id" width="2rem" />
@@ -45,7 +45,7 @@ function SlideTable({ type, slides }) {
 	);
 
 	return (
-		<Table rowKey="position" dataSource={slides} pagination={false}>
+		<Table rowKey="position" dataSource={slides} pagination={false} locale={{ emptyText: 'Loading/None' }}>
 			<Table.Column title="Slide" dataIndex="src" width="10rem" render={val => <div style={{ textAlign: 'center' }}><Image src={val} alt="Slide Image" height="5rem" /></div>} />
 			<Table.Column title="ID" dataIndex="id" width="2rem" />
 			<Table.Column title="Description" dataIndex="description" key="description" />
