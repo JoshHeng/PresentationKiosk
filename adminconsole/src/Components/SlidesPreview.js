@@ -25,9 +25,16 @@ function BottomBarSlideContent({ item }) {
 			return (
 				<div>
 					{ item.tweet }
-					<p style={{ color: '#555', marginTop: '0.3rem', fontSize: '0.9em' }}><Avatar src={item.author.avatar} size="small" style={{ marginRight: '0.5rem' }} />By { item.author.name } ({item.author.username})</p>
+					<p style={{ color: '#555', marginTop: '0.3rem', fontSize: '0.9em' }}><Avatar src={item.author.avatar} size="small" style={{ marginRight: '0.5rem' }} />By { item.author.name } (@{item.author.username})</p>
 				</div>
 			);
+		case 'instagrampost':
+			return (
+				<div>
+					{ item.content }
+					<p style={{ color: '#555', marginTop: '0.3rem', fontSize: '0.9em' }}>By @{item.author.username}</p>
+				</div>
+			)
 		default:
 			return 'Invalid Type';
 	}
