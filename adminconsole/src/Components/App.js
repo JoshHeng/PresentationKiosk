@@ -6,6 +6,9 @@ import socket from '../socket';
 
 function App() {
 	const [ loggedIn, setLoggedIn ] = useState(1);
+	const [ localVolume, setLocalVolume ] = useState(5);
+	const [ musicStatus, setMusicStatus ] = useState({ volume: 5, paused: false });
+
 
 	useEffect(() => {
 		socket.on('connect', () => {
@@ -37,6 +40,23 @@ function App() {
 		socket.on('adminconsole.disconnected', () => {
 			message.error('Admin Console disconnected from Server');
 		});
+		
+		socket.on('music.volume', volume => setMusicStatus(_status => {
+			let status = Object.assign({}, _status);
+			status.volume = volume;
+			setLocalVolume(volume);
+			return status;
+		}));
+		socket.on('music.pause', volume => setMusicStatus(_status => {
+			let status = Object.assign({}, _status);
+			status.paused = true;
+			return status;
+		}));
+		socket.on('music.resume', volume => setMusicStatus(_status => {
+			let status = Object.assign({}, _status);
+			status.paused = false;
+			return status;
+		}));
 
 		return () => {
 			socket.off('connect');
@@ -44,6 +64,9 @@ function App() {
 			socket.off('kiosk.disconnected');
 			socket.off('adminconsole.connected');
 			socket.off('adminconsole.disconnected');
+			socket.off('music.volume');
+			socket.off('music.pause');
+			socket.off('music.resume');
 		}
 	}, []);
 
@@ -97,16 +120,13 @@ function App() {
 						</Collapse>
 					</Card>
 					<Card title="Music" bordered={false}>
-						<div style={{ marginBottom: '1rem', fontSize: '1.1em' }}>
-							<strong>Now Playing: </strong>Song
-						</div>
 						<div>
-							<Button type="primary" style={{ marginRight: '0.5rem' }}>Pause</Button>
-							<Button>Skip</Button>
+							<Button type="primary" style={{ marginRight: '0.5rem' }} onClick={() => socket.emit('music.toggle')}>{ musicStatus.paused ? 'Resume' : 'Pause' }</Button>
+							<Button onClick={() => socket.emit('music.skip')}>Skip</Button>
 						</div>
 						<div style={{ marginTop: '1rem' }}>
 							<label>Volume</label>
-							<Slider min={0} max={100} labe/>
+							<Slider min={0} max={100} onAfterChange={() => socket.emit('music.volume.set', localVolume)} value={localVolume} onChange={val => setLocalVolume(val)} />
 						</div>
 					</Card>
 				</Col>

@@ -159,6 +159,16 @@ function previousSlide(slideSet = 'slides') {
 	else advanceSlideTimeout = setTimeout(advanceSlide, config[slideSet].duration);
 }
 
+function nextSong() {
+	config.music.currentIndex += 1;
+	if (config.music.currentIndex >= config.music.queue.length) config.music.currentIndex = 0;
+
+	saveConfig();
+
+	io.to('kiosk').emit('music.play', !!config.music.paused);
+	setTimeout(() => io.to('kiosk').emit('music.load', config.music.queue[config.music.currentIndex + 1 >= config.music.queue.length ? 0 : config.music.currentIndex + 1]), 500);
+}
+
 io.on("connection", socket => {
 	console.log('Connection Established');
 
@@ -172,6 +182,15 @@ io.on("connection", socket => {
 
 			socket.on('slides.request', () => socket.emit('slides.set', getSlideRelativeQueue(-1, 1)));
 			socket.on('bottombar.request', () => socket.emit('bottombar.set', getSlideRelativeQueue(-1, 1, 'bottombar')));
+			socket.on('music.ended', nextSong);
+
+			socket.emit('music.volume', config.music.volume, () => {
+				socket.emit('music.load', config.music.queue[config.music.currentIndex], () => {
+					socket.emit('music.play', !!config.music.paused, () => {
+						socket.emit('music.load', config.music.queue[config.music.currentIndex + 1 >= config.music.queue.length ? 0 : config.music.currentIndex + 1]);
+					});
+				});
+			});
 
 			return callback(true);
 		}
@@ -189,6 +208,33 @@ io.on("connection", socket => {
 			socket.on('slides.previous', () => previousSlide());
 			socket.on('bottombar.next', () => advanceSlide('bottombar'));
 			socket.on('bottombar.previous', () => previousSlide('bottombar'));
+			socket.on('music.volume.set', volume => {
+				volume = parseInt(volume);
+				if (isNaN(volume)) return;
+
+				config.music.volume = volume/100;
+				saveConfig();
+
+				io.to('kiosk').emit('music.volume', config.music.volume);
+				io.to('adminconsole').emit('music.volume', config.music.volume * 100);
+			});
+			socket.on('music.skip', nextSong);
+			socket.on('music.toggle', () => {
+				config.music.paused = !config.music.paused;
+				saveConfig();
+
+				if (config.music.paused) {
+					io.to('kiosk').emit('music.pause');
+					io.to('adminconsole').emit('music.pause');
+				}
+				else {
+					io.to('kiosk').emit('music.resume');
+					io.to('adminconsole').emit('music.resume');
+				}
+			});
+
+			socket.emit('music.volume', config.music.volume * 100);
+			if (config.music.paused) socket.emit('music.pause');
 
 			return callback(true);
 		}

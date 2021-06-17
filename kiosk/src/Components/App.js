@@ -6,6 +6,7 @@ import BottomBar from './BottomBar/BottomBar';
 import Login from './Login';
 import styles from './App.module.css';
 import socket from '../socket';
+import './musicplayer';
 
 function App() {
 	const [ loggedIn, setLoggedIn ] = useState(1);
