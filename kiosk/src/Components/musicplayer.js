@@ -9,7 +9,7 @@ function fadeIn() {
 		if (status === 2) status = 0;
 		return;
 	}
-	
+
 	currentTrack.volume = Math.min(currentTrack.volume + 0.01, volume);
 	setTimeout(fadeIn, 200);
 }
@@ -46,14 +46,18 @@ socket.on('music.play', (startPaused, callback = null) => {
 	if (callback) callback();
 });
 socket.on('music.pause', () => {
-	status = 1;
-	fadeOut();
+	if (currentTrack) {
+		status = 1;
+		fadeOut();
+	}
 });
 socket.on('music.resume', () => {
-	currentTrack.volume = 0;
-	status = 2;
-	fadeIn();
-	currentTrack.play()
+	if (currentTrack) {
+		currentTrack.volume = 0;
+		status = 2;
+		fadeIn();
+		currentTrack.play()
+	}
 });
 socket.on('music.volume', (vol, callback = null) => {
 	volume = vol/5;
