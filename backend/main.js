@@ -136,7 +136,7 @@ function previousSlide(slideSet = 'slides') {
 	if (slideSet === 'slides' && advanceSlideTimeout) clearTimeout(advanceSlideTimeout);
 	else if (slideSet === 'bottombar' && advanceBottomBarTimeout) clearTimeout(advanceBottomBarTimeout);
 
-	const currentSlideKey = confi[slideSet].queues.main.items[config[slideSet].queues.main.position];
+	const currentSlideKey = config[slideSet].queues.main.items[config[slideSet].queues.main.position];
 	if (currentSlideKey.startsWith('queue.')) {
 		const queueKey = currentSlideKey.slice(6);
 

@@ -11,4 +11,17 @@
 .bottomBar > div {
 	position: absolute;
 	transition: 1s opacity;
+
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.contentBox {
+	background-color: #fff;
+	color: #161616;
+	padding: 0.5rem 1rem 0.6rem;
+	margin: 0.5rem;
+	font-size: '1.2em';
 }

@@ -1,20 +1,20 @@
-.tweet {
+.social {
 	background-color: #fff;
 	color: #161616;
 	padding: 0.5rem 1rem 0.6rem;
 	margin: 0.5rem;
 	font-family: 'Helvetica', 'Segoe UI', 'Helvetica Neue',
 }
-.tweetTop {
+.socialTop {
 	display: flex;
 	align-content: center;
 	font-size: 0.95em;
 }
-.tweetTop > svg {
+.socialTop > svg, .socialTop > img {
 	margin-left: auto;
 	height: 1.5rem;
 }
-.tweetTop > div {
+.socialTop > div {
 	display: flex;
 	align-items: center;
 }
@@ -30,7 +30,7 @@
 	margin-left: 0.8rem;
 	color: #657786;
 }
-.tweet > p {
+.social > p {
 	font-size: 1.1em;
 	margin: 0;
 }
