@@ -103,11 +103,13 @@
 		"events": [
 			{
 				"startsAt": 1624104000,
-				"title": "Start"
+				"title": "Start",
+				"time": "1pm"
 			},
 			{
 				"startsAt": 1624107600,
-				"title": "Event 2"
+				"title": "Event 2",
+				"time": "2pm"
 			}
 		],
 		"showCountdown": true

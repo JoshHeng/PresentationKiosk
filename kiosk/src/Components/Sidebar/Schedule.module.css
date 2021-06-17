@@ -4,3 +4,7 @@
 	flex-grow: 1;
 	overflow: hidden;
 }
+.event {
+	font-size: 1.05em;
+	margin-top: 0.5rem;
+}

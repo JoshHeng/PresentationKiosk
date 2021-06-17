@@ -220,6 +220,13 @@ function nextSong() {
 	setTimeout(() => io.to('kiosk').emit('music.load', config.music.queue[config.music.currentIndex + 1 >= config.music.queue.length ? 0 : config.music.currentIndex + 1]), 500);
 }
 
+function updateSchedule() {
+	io.to('kiosk').emit('schedule.set', {
+		showCountdown: config.schedule.showCountdown,
+		events: config.schedule.events.slice(0, 5)
+	});
+}
+
 io.on("connection", socket => {
 	console.log('Connection Established');
 
@@ -242,6 +249,10 @@ io.on("connection", socket => {
 					});
 				});
 			});
+			socket.on('schedule.request', () => socket.emit('schedule.set', {
+				showCountdown: config.schedule.showCountdown,
+				events: config.schedule.events.slice(0, 5)
+			}));
 
 			return callback(true);
 		}

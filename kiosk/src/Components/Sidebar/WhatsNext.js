@@ -2,22 +2,32 @@ import { useEffect, useState } from 'react';
 
 import styles from './WhatsNext.module.css';
 
-export default function WhatsNext() {
+export default function WhatsNext({ nextEvent, showCountdown }) {
 	const [ secondsRemaining, setSecondsRemaining ] = useState(120);
 
 	useEffect(() => {
+		var timeUpdater = null;
+
 		function updateTime() {
-			setSecondsRemaining(seconds => seconds > 0 ? seconds - 1 : 0);
-			setTimeout(updateTime, 1000);
+			const currentTime = nextEvent && Math.floor(nextEvent.startsAt - (new Date()).getTime()/1000);
+			setSecondsRemaining((currentTime && currentTime > 0) ? currentTime : 0);
+			timeUpdater = setTimeout(updateTime, 1000);
 		}
 		updateTime();
-	}, []);
+
+		return () => {
+			if (timeUpdater) {
+				clearTimeout(timeUpdater);
+				timeUpdater = null;
+			}
+		}
+	}, [nextEvent]);
 
 	return (
 		<div className={styles.whatsNext}>
 			<h2>Up Next</h2>
-			<span className={styles.timeRemaining} style={{ opacity: secondsRemaining > 0 ? '100%' : 0 }}>{ secondsRemaining > 0 ? `${String(Math.floor(secondsRemaining/60)).padStart(2, '0')}:${String(Math.floor(secondsRemaining%60)).padStart(2, '0')}` : '00:00' }</span>
-			<p className={styles.title}>Welcome</p>
+			<span className={styles.timeRemaining} style={{ opacity: (showCountdown && secondsRemaining > 0) ? '100%' : 0 }}>{ secondsRemaining > 0 ? `${String(Math.floor(secondsRemaining/60)).padStart(2, '0')}:${String(Math.floor(secondsRemaining%60)).padStart(2, '0')}` : '00:00' }</span>
+			<p className={styles.title}>{ nextEvent ? nextEvent.title : 'None' }</p>
 		</div>
 	);
 }
