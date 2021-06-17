@@ -24,4 +24,7 @@
 	padding: 0.5rem 1rem 0.6rem;
 	margin: 0.5rem;
 	font-size: '1.2em';
+	min-height: calc(70% - 2rem);
+	display: flex;
+	align-items: center;
 }
