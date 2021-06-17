@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Row, Col, Card, Button, Slider, Collapse, Space, InputNumber, Tabs, message } from 'antd';
 import SlidesPreview from './SlidesPreview';
 import Login from './Login';
+import Schedule from './Schedule'
 import socket from '../socket';
 
 function App() {
@@ -107,18 +108,7 @@ function App() {
 						<img src="/images/logo.png" alt="Logo" style={{ maxHeight: '3rem' }} />
 					</div>
 
-					<Card title="Schedule" bordered={false}>
-						<div>
-							<Button style={{ marginRight: '1rem' }}>Hide Time Remaining</Button>
-							<Button style={{ marginRight: '0.2rem' }}>Previous Event</Button>
-							<Button type="primary">Next Event</Button>
-						</div>
-						<Collapse style={{ marginTop: '1rem' }}>
-							<Collapse.Panel header="Events" key="1">
-
-							</Collapse.Panel>
-						</Collapse>
-					</Card>
+					<Schedule />
 					<Card title="Music" bordered={false}>
 						<div>
 							<Button type="primary" style={{ marginRight: '0.5rem' }} onClick={() => socket.emit('music.toggle')}>{ musicStatus.paused ? 'Resume' : 'Pause' }</Button>

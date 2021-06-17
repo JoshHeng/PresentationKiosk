@@ -9,8 +9,6 @@ export default function Schedule() {
 
 	useEffect(() => {
 		socket.on('schedule.set', data => {
-			console.log('hey');
-			console.log(data);
 			setShowCountdown(data.showCountdown);
 			setEvents(data.events);
 		});
@@ -28,7 +26,7 @@ export default function Schedule() {
 				<h2>Schedule (BST)</h2>
 				{ events.length === 0 ? 'None' : 
 					<div>
-						{ events.map(event => <div className={styles.event}>
+						{ events.map(event => <div className={styles.event} key={event.id}>
 							<strong>{ event.time }</strong> - { event.title }
 						</div>)}
 					</div>

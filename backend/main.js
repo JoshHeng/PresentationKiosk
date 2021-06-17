@@ -223,8 +223,9 @@ function nextSong() {
 function updateSchedule() {
 	io.to('kiosk').emit('schedule.set', {
 		showCountdown: config.schedule.showCountdown,
-		events: config.schedule.events.slice(0, 5)
+		events: config.schedule.events.slice(config.schedule.currentEventIndex, config.schedule.currentEventIndex + 5)
 	});
+	io.to('adminconsole').emit('schedule.set', config.schedule);
 }
 
 io.on("connection", socket => {
@@ -251,7 +252,7 @@ io.on("connection", socket => {
 			});
 			socket.on('schedule.request', () => socket.emit('schedule.set', {
 				showCountdown: config.schedule.showCountdown,
-				events: config.schedule.events.slice(0, 5)
+				events: config.schedule.events.slice(config.schedule.currentEventIndex, config.schedule.currentEventIndex + 5)
 			}));
 
 			return callback(true);
@@ -305,6 +306,25 @@ io.on("connection", socket => {
 					io.to('kiosk').emit('music.resume');
 					io.to('adminconsole').emit('music.resume');
 				}
+			});
+
+			socket.on('schedule.request', () => socket.emit('schedule.set', config.schedule));
+			socket.on('schedule.toggleCountdown', () => {
+				config.schedule.showCountdown = !config.schedule.showCountdown;
+				saveConfig();
+				updateSchedule();
+			});
+			socket.on('schedule.previous', () => {
+				if (config.schedule.currentEventIndex <= 0) return;
+				config.schedule.currentEventIndex -= 1;
+				saveConfig();
+				updateSchedule();
+			});
+			socket.on('schedule.next', () => {
+				if (config.schedule.currentEventIndex + 1 >= config.schedule.events.length) return;
+				config.schedule.currentEventIndex += 1;
+				saveConfig();
+				updateSchedule();
 			});
 
 			socket.emit('music.volume', config.music.volume * 100);
