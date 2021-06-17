@@ -108,7 +108,6 @@ function App() {
 						<img src="/images/logo.png" alt="Logo" style={{ maxHeight: '3rem' }} />
 					</div>
 
-					<Schedule />
 					<Card title="Music" bordered={false}>
 						<div>
 							<Button type="primary" style={{ marginRight: '0.5rem' }} onClick={() => socket.emit('music.toggle')}>{ musicStatus.paused ? 'Resume' : 'Pause' }</Button>
@@ -119,6 +118,9 @@ function App() {
 							<Slider min={0} max={100} onAfterChange={() => socket.emit('music.volume.set', localVolume)} value={localVolume} onChange={val => setLocalVolume(val)} />
 						</div>
 					</Card>
+
+					<Schedule />
+					
 				</Col>
 				<Col span={12}>
 					<Tabs defaultActiveKey="slides">

@@ -228,6 +228,33 @@ function updateSchedule() {
 	io.to('adminconsole').emit('schedule.set', config.schedule);
 }
 
+function checkEvents(events) {
+	const newEvents = [];
+
+	try {
+		for (const event of events) {
+			if (!event.startsAt) return { error: 'Missing start time' };
+			if (!event.title) return { error: 'Missing title' };
+			if (!event.time) return { error: 'Missing time' };
+
+			event.startsAt = parseInt(event.startsAt);
+			if (isNaN(event.startsAt)) return { error: 'Invalid start time' }
+
+			newEvents.push({
+				startsAt: event.startsAt,
+				title: event.title.slice(0, 64),
+				time: event.time.slice(0, 16)
+			});
+		}
+
+		return { events: newEvents }
+	}
+	catch(err) {
+		console.error(err);
+		return { error: 'Invalid' }
+	}
+}
+
 io.on("connection", socket => {
 	console.log('Connection Established');
 
@@ -325,6 +352,16 @@ io.on("connection", socket => {
 				config.schedule.currentEventIndex += 1;
 				saveConfig();
 				updateSchedule();
+			});
+			socket.on('schedule.edit', (events, callback) => {
+				let check = checkEvents(events);
+				if (check.error) return callback(check.error || 'An error occured');
+
+				config.schedule.events = check.events;
+				if (config.schedule.currentEventIndex >= config.schedule.events.length) config.schedule.currentEventIndex = 0;
+				saveConfig();
+				updateSchedule();
+				return callback();
 			});
 
 			socket.emit('music.volume', config.music.volume * 100);

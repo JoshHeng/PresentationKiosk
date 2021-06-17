@@ -114,6 +114,7 @@ export default function Slides({ type }) {
 					<Button style={{ marginRight: '0.2rem' }}onClick={onPreviousSlide}>Previous { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
 					<Button onClick={onAdvanceSlide}>Next { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
 				</div>
+				<Button style={{ marginLeft: 'auto' }}>Edit</Button>
 			</div>
 			<SlideTable type={type} slides={slides} />
 		</>
