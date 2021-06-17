@@ -100,9 +100,17 @@
 		"paused": false
 	},
 	"schedule": {
-		"events": {
-			
-		}
+		"events": [
+			{
+				"startsAt": 1624104000,
+				"title": "Start"
+			},
+			{
+				"startsAt": 1624107600,
+				"title": "Event 2"
+			}
+		],
+		"showCountdown": true
 	},
 	"music": {
 		"queue": ["https://assets.joshheng.co.uk/music/background/amber-vyen.mp3","https://assets.joshheng.co.uk/music/background/autumnwind-dyalla.mp3","https://assets.joshheng.co.uk/music/background/calmity-yunglogos.mp3","https://assets.joshheng.co.uk/music/background/campfire-delicatesteve.mp3","https://assets.joshheng.co.uk/music/background/fallinginslowmotion-rkvc.mp3","https://assets.joshheng.co.uk/music/background/float-geographer.mp3","https://assets.joshheng.co.uk/music/background/futurekingofheaven-zachariahhickman.mp3","https://assets.joshheng.co.uk/music/background/glacier-patrickpatrikios.mp3","https://assets.joshheng.co.uk/music/background/in3-godmode.mp3","https://assets.joshheng.co.uk/music/background/interstellarmood-nicostaf.mp3","https://assets.joshheng.co.uk/music/background/inthetemplegarden-aaronkenny.mp3","https://assets.joshheng.co.uk/music/background/lazywalk-cheel.mp3","https://assets.joshheng.co.uk/music/background/leaningontheeverlastingarms-zachariahhickman.mp3","https://assets.joshheng.co.uk/music/background/meeka-steveadams.mp3","https://assets.joshheng.co.uk/music/background/moonrise-reedmathis.mp3","https://assets.joshheng.co.uk/music/background/nebularfocus-danhenig.mp3","https://assets.joshheng.co.uk/music/background/ontheisland-godmode.mp3","https://assets.joshheng.co.uk/music/background/outlawsfarewellparti-reedmathis.mp3","https://assets.joshheng.co.uk/music/background/outlawsfarewellpartii-reedmathis.mp3","https://assets.joshheng.co.uk/music/background/pastorale-joelcummins.mp3","https://assets.joshheng.co.uk/music/background/sailing-delicatesteve.mp3","https://assets.joshheng.co.uk/music/background/seasidepiazza-aaronkenny.mp3","https://assets.joshheng.co.uk/music/background/seasons-delicatesteve.mp3","https://assets.joshheng.co.uk/music/background/simple-patrickpatrikios.mp3","https://assets.joshheng.co.uk/music/background/smoothandcool-nicostaf.mp3","https://assets.joshheng.co.uk/music/background/sunriseinparis-danhenig.mp3","https://assets.joshheng.co.uk/music/background/twomoons-bobbyrichards.mp3","https://assets.joshheng.co.uk/music/background/violetspirit-danhenig.mp3","https://assets.joshheng.co.uk/music/background/walkinginthesky-nicostaf.mp3","https://assets.joshheng.co.uk/music/background/walkintoparadise-carmenmaríaandeduespinal.mp3"],
