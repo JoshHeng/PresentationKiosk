@@ -108,8 +108,12 @@ function updateBottombarSlides() {
 }
 
 function advanceSlide(slideSet = 'slides') {
-	if (advanceSlideTimeout) {
+	if (slideSet === 'slides' && advanceSlideTimeout) {
 		clearTimeout(advanceSlideTimeout);
+		advanceSlideTimeout = null;
+	}
+	else if (slideSet === 'bottombar' && advanceBottomBarTimeout) {
+		clearTimeout(advanceBottomBarTimeout);
 		advanceSlideTimeout = null;
 	}
 
@@ -134,7 +138,9 @@ function advanceSlide(slideSet = 'slides') {
 
 	if (!config[slideSet].paused) {
 		const currentSlide = getSlideRelativeQueue(0, 0, slideSet)[0];
-		advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
+
+		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), currentSlide.duration);
+		else advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
 	}
 }
 if (!config.slides.paused) advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
@@ -174,6 +180,33 @@ function previousSlide(slideSet = 'slides') {
 
 		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), currentSlide.duration);
 		else advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
+	}
+}
+function toggleSlidesPaused(slideSet = 'slides') {
+	config[slideSet].paused = !config[slideSet].paused;
+	saveConfig();
+
+	if (config[slideSet].paused) {
+		if (slideSet === 'slides' && advanceSlideTimeout) {
+			clearTimeout(advanceSlideTimeout);
+			advanceSlideTimeout = null;
+		}
+		else if (slideSet === 'bottombar' && advanceBottomBarTimeout) {
+			clearTimeout(advanceBottomBarTimeout);
+			advanceSlideTimeout = null;
+		}
+		
+		if (slideSet === 'slides') io.to('adminconsole').emit('slides.pause');
+		else io.to('adminconsole').emit('bottombar.pause');
+	}
+	else {
+		const currentSlide = getSlideRelativeQueue(0, 0, slideSet)[0];
+
+		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), currentSlide.duration);
+		else advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
+
+		if (slideSet === 'slides') io.to('adminconsole').emit('slides.resume');
+		else io.to('adminconsole').emit('bottombar.resume');
 	}
 }
 
@@ -224,11 +257,19 @@ io.on("connection", socket => {
 
 			socket.on('slides.next', () => advanceSlide());
 			socket.on('slides.previous', () => previousSlide());
-			socket.on('slides.request', () => socket.emit('slides.set', getSlideRelativeQueue(0, 9)));
+			socket.on('slides.request', () => {
+				socket.emit('slides.set', getSlideRelativeQueue(0, 9))
+				if (config.slides.paused) socket.emit('slides.pause');
+			});
+			socket.on('slides.togglepause', () => toggleSlidesPaused());
 
 			socket.on('bottombar.next', () => advanceSlide('bottombar'));
 			socket.on('bottombar.previous', () => previousSlide('bottombar'));
-			socket.on('bottombar.request', () => socket.emit('bottombar.set', getSlideRelativeQueue(0, 9, 'bottombar')));
+			socket.on('bottombar.request', () => {
+				socket.emit('bottombar.set', getSlideRelativeQueue(0, 9, 'bottombar'));
+				if (config.bottombar.paused) socket.emit('bottombar.pause');
+			});
+			socket.on('bottombar.togglepause', () => toggleSlidesPaused('bottombar'));
 
 			socket.on('music.volume.set', volume => {
 				volume = parseInt(volume);

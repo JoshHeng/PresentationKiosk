@@ -35,6 +35,8 @@ function BottomBarSlideContent({ item }) {
 					<p style={{ color: '#555', marginTop: '0.3rem', fontSize: '0.9em' }}>By @{item.author.username}</p>
 				</div>
 			)
+		case 'blank':
+			return '';
 		default:
 			return 'Invalid Type';
 	}
@@ -46,8 +48,8 @@ function SlideTable({ type, slides }) {
 			<Table.Column title="Content" dataIndex="content" render={(val, item) => <BottomBarSlideContent item={item} />} />
 			<Table.Column title="Type" dataIndex="type" render={val => <BottomBarTag type={val} />} />
 			<Table.Column title="ID" dataIndex="id" width="2rem" />
-			<Table.Column title="Queue" dataIndex="queue" key="queue" />
-			<Table.Column title="Duration" dataIndex="duration" key="duration" />
+			<Table.Column title="Queue" dataIndex="queue" key="queue" render={val => <Tag>{val}</Tag>} />
+			<Table.Column title="Duration" dataIndex="duration" key="duration" render={val => `${val/1000}s`} />
 		</Table>
 	);
 
@@ -56,21 +58,39 @@ function SlideTable({ type, slides }) {
 			<Table.Column title="Slide" dataIndex="src" width="10rem" render={val => <div style={{ textAlign: 'center' }}><Image src={val} alt="Slide Image" height="5rem" /></div>} />
 			<Table.Column title="ID" dataIndex="id" width="2rem" />
 			<Table.Column title="Description" dataIndex="description" key="description" />
-			<Table.Column title="Queue" dataIndex="queue" key="queue" />
-			<Table.Column title="Duration" dataIndex="duration" key="duration" />
+			<Table.Column title="Queue" dataIndex="queue" key="queue" render={val => <Tag>{val}</Tag>} />
+			<Table.Column title="Duration" dataIndex="duration" key="duration" render={val => `${val/1000}s`} />
 		</Table>
 	);
 }
 
 export default function Slides({ type }) {
 	const [ slides, setSlides ] = useState([]);
+	const [ paused, setPaused ] = useState(false);
 
 	useEffect(() => {
-		if (type === 'bottombar') socket.on('bottombar.set', _slides => setSlides(_slides));
-		else socket.on('slides.set', _slides => setSlides(_slides));
+		if (type === 'bottombar') {
+			socket.on('bottombar.set', _slides => setSlides(_slides));
+			socket.on('bottombar.pause', () => setPaused(true));
+			socket.on('bottombar.resume', () => setPaused(false));
+		}
+		else {
+			socket.on('slides.set', _slides => setSlides(_slides));
+			socket.on('slides.pause', () => setPaused(true));
+			socket.on('slides.resume', () => setPaused(false));
+		}
 
 		if (type === 'bottombar') socket.emit('bottombar.request');
 		else socket.emit('slides.request');
+
+		return () => {
+			socket.off('slides.pause');
+			socket.off('slides.resume');
+			socket.off('bottombar.pause');
+			socket.off('bottombar.resume');
+			socket.off('bottombar.set');
+			socket.off('slides.set');
+		}
 	}, [type]);
 
 	function onPreviousSlide() {
@@ -81,6 +101,10 @@ export default function Slides({ type }) {
 		if (type === 'bottombar') socket.emit('bottombar.next');
 		else socket.emit('slides.next');
 	}
+	function onPauseSlides() {
+		if (type === 'bottombar') socket.emit('bottombar.togglepause');
+		else socket.emit('slides.togglepause');
+	}
 
 	return (
 		<>
@@ -88,6 +112,7 @@ export default function Slides({ type }) {
 				<Space>
 					<Button onClick={onPreviousSlide}>Previous { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
 					<Button type="primary" onClick={onAdvanceSlide}>Next { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
+					<Button onClick={onPauseSlides}>{ paused ? 'Resume' : 'Pause' }</Button>
 				</Space>
 				<div>
 					<label style={{ marginRight: '0.5rem' }}>Default Slide Duration (s)</label>
