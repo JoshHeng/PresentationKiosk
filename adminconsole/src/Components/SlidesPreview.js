@@ -1,40 +1,71 @@
-import { Table, Image, Space, Button, InputNumber } from 'antd';
-import { sortableContainer, sortableElement, sortableHandle } from 'react-sortable-hoc';
-import { MenuOutlined } from '@ant-design/icons';
-import styles from './SlidesPreview.module.css';
+import { useEffect, useState } from 'react';
+import { Table, Image, Space, Button, InputNumber, Tag, Avatar } from 'antd';
 import socket from '../socket';
 
-const slides = [
-	{
-		id: 1,
-		src: 'https://www.havenresorts.com/uploads/9/8/7/9/98799368/published/16-9placeholder_59.png',
-		title: 'Test'
-	},
-	{
-		id: 2,
-		src: 'https://www.clevertech-group.com/assets/img/placeholder/16x9.jpg',
-		title: 'Test 2'
-	},
-]
-
-const DragHandle = sortableHandle(() => <MenuOutlined style={{ cursor: 'grab', color: '#999' }} />);
-const SortableItem = sortableElement(props => <tr {...props} />);
-const SortableContainer = sortableContainer(props => <tbody {...props} />);
-
-function onSortEnd({ oldIndex, newIndex }) {
-	console.log('end');
+function BottomBarTag({ type }) {
+	switch (type) {
+		case 'text':
+			return <Tag color="orange">Text</Tag>;
+		case 'tweet':
+			return <Tag color="blue">Tweet</Tag>;
+		case 'instagrampost':
+			return <Tag color="magenta">Instagram</Tag>;
+		case 'blank':
+			return <Tag>Blank</Tag>;
+		default:
+			return <Tag>{type}</Tag>
+	}
 }
 
-function DraggableContainer(props) {
-	return <SortableContainer useDragHandle disableAutoscroll helperClass={styles.rowDragging} onSortEnd={onSortEnd} {...props} />;
-}
-function DraggableBodyRow(props) {
-	const index = slides.findIndex(x => x.index === props['data-row-key']);
-	return <SortableItem index={index} {...props} />;
+function BottomBarSlideContent({ item }) {
+	switch (item.type) {
+		case 'text':
+			return item.text;
+		case 'tweet':
+			return (
+				<div>
+					{ item.tweet }
+					<p style={{ color: '#555', marginTop: '0.3rem', fontSize: '0.9em' }}><Avatar src={item.author.avatar} size="small" style={{ marginRight: '0.5rem' }} />By { item.author.name } ({item.author.username})</p>
+				</div>
+			);
+		default:
+			return 'Invalid Type';
+	}
 }
 
+function SlideTable({ type, slides }) {
+	if (type === 'bottombar') return (
+		<Table rowKey="position" dataSource={slides} pagination={false}>
+			<Table.Column title="Content" dataIndex="content" render={(val, item) => <BottomBarSlideContent item={item} />} />
+			<Table.Column title="Type" dataIndex="type" render={val => <BottomBarTag type={val} />} />
+			<Table.Column title="ID" dataIndex="id" width="2rem" />
+			<Table.Column title="Queue" dataIndex="queue" key="queue" />
+			<Table.Column title="Duration" dataIndex="duration" key="duration" />
+		</Table>
+	);
+
+	return (
+		<Table rowKey="position" dataSource={slides} pagination={false}>
+			<Table.Column title="Slide" dataIndex="src" width="10rem" render={val => <div style={{ textAlign: 'center' }}><Image src={val} alt="Slide Image" height="5rem" /></div>} />
+			<Table.Column title="ID" dataIndex="id" width="2rem" />
+			<Table.Column title="Description" dataIndex="description" key="description" />
+			<Table.Column title="Queue" dataIndex="queue" key="queue" />
+			<Table.Column title="Duration" dataIndex="duration" key="duration" />
+		</Table>
+	);
+}
 
 export default function Slides({ type }) {
+	const [ slides, setSlides ] = useState([]);
+
+	useEffect(() => {
+		if (type === 'bottombar') socket.on('bottombar.set', _slides => setSlides(_slides));
+		else socket.on('slides.set', _slides => setSlides(_slides));
+
+		if (type === 'bottombar') socket.emit('bottombar.request');
+		else socket.emit('slides.request');
+	}, [type]);
+
 	function onPreviousSlide() {
 		if (type === 'bottombar') socket.emit('bottombar.previous');
 		else socket.emit('slides.previous');
@@ -48,23 +79,15 @@ export default function Slides({ type }) {
 		<>
 			<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
 				<Space>
-					<Button onClick={onPreviousSlide}>Previous Slide</Button>
-					<Button type="primary" onClick={onAdvanceSlide}>Next Slide</Button>
+					<Button onClick={onPreviousSlide}>Previous { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
+					<Button type="primary" onClick={onAdvanceSlide}>Next { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
 				</Space>
 				<div>
-					<label style={{ marginRight: '0.5rem' }}>Slide Duration (s)</label>
+					<label style={{ marginRight: '0.5rem' }}>Default Slide Duration (s)</label>
 					<InputNumber />
 				</div>
 			</div>
-			<Table rowKey="id" dataSource={slides} pagination={false} components={{ body: {
-				wrapper: DraggableContainer,
-				row: DraggableBodyRow
-			}}}>
-				<Table.Column title="Sort" dataIndex="sort" width={30} render={() => <DragHandle />} className={styles.dragVisible} />
-				<Table.Column title="Slide" dataIndex="src" width="10rem" render={val => <Image src={val} alt="Slide Image" width="10rem" />} className={styles.dragVisible} />
-				<Table.Column title="Title" dataIndex="title" key="title" />
-				<Table.Column title="ID" dataIndex="id" />
-			</Table>
+			<SlideTable type={type} slides={slides} />
 		</>
 	);
 }

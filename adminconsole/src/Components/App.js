@@ -73,7 +73,7 @@ function App() {
 	useEffect(() => {
 		if (loggedIn === 2) {
 			socket.on('disconnect', () => {
-				if (loggedIn === 2) message.error('Disconnected from Server', 0);
+				if (loggedIn === 2) message.error('Disconnected from Server');
 			});
 		}
 		
@@ -132,11 +132,11 @@ function App() {
 				</Col>
 				<Col span={12}>
 					<Tabs defaultActiveKey="slides">
-						<Tabs.TabPane tab="Slides" key="slides">
+						<Tabs.TabPane tab="Slides" key="slides" forceRender>
 							<SlidesPreview />
 						</Tabs.TabPane>
 						<Tabs.TabPane tab="Bottom Bar" key="bar">
-							<SlidesPreview type="bottombar" />
+							<SlidesPreview type="bottombar" forceRender />
 						</Tabs.TabPane>
 					</Tabs>
 				</Col>

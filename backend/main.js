@@ -100,9 +100,11 @@ function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 
 function updateKioskSlides() {
 	io.to('kiosk').emit('slides.set', getSlideRelativeQueue(-1, 1));
+	io.to('adminconsole').emit('slides.set', getSlideRelativeQueue(0, 9));
 }
 function updateBottombarSlides() {
 	io.to('kiosk').emit('bottombar.set', getSlideRelativeQueue(-1, 1, 'bottombar'));
+	io.to('adminconsole').emit('bottombar.set', getSlideRelativeQueue(0, 9, 'bottombar'));
 }
 
 function advanceSlide(slideSet = 'slides') {
@@ -206,8 +208,12 @@ io.on("connection", socket => {
 
 			socket.on('slides.next', () => advanceSlide());
 			socket.on('slides.previous', () => previousSlide());
+			socket.on('slides.request', () => socket.emit('slides.set', getSlideRelativeQueue(0, 9)));
+
 			socket.on('bottombar.next', () => advanceSlide('bottombar'));
 			socket.on('bottombar.previous', () => previousSlide('bottombar'));
+			socket.on('bottombar.request', () => socket.emit('bottombar.set', getSlideRelativeQueue(0, 9, 'bottombar')));
+
 			socket.on('music.volume.set', volume => {
 				volume = parseInt(volume);
 				if (isNaN(volume)) return;
