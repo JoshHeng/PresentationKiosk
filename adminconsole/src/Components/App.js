@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Row, Col, Card, Button, Slider, Collapse, Space, InputNumber, Tabs, message } from 'antd';
+import { Row, Col, Card, Button, Slider, Tabs, message } from 'antd';
 import SlidesPreview from './SlidesPreview';
 import Login from './Login';
 import Schedule from './Schedule'

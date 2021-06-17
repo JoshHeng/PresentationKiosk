@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Image, Space, Button, InputNumber, Tag, Avatar } from 'antd';
+import { Table, Image, Button, Tag, Avatar } from 'antd';
 import socket from '../socket';
 
 function BottomBarTag({ type }) {
@@ -44,7 +44,7 @@ function BottomBarSlideContent({ item }) {
 
 function SlideTable({ type, slides }) {
 	if (type === 'bottombar') return (
-		<Table rowKey="position" dataSource={slides} pagination={false} locale={{ emptyText: 'Loading/None' }}>
+		<Table rowKey="position" dataSource={slides} pagination={false} locale={{ emptyText: 'Loading/None' }} rowClassName={(event, index) => index === 0 ? 'current-row' : ''}>
 			<Table.Column title="Content" dataIndex="content" render={(val, item) => <BottomBarSlideContent item={item} />} />
 			<Table.Column title="Type" dataIndex="type" render={val => <BottomBarTag type={val} />} />
 			<Table.Column title="ID" dataIndex="id" width="2rem" />
@@ -54,7 +54,7 @@ function SlideTable({ type, slides }) {
 	);
 
 	return (
-		<Table rowKey="position" dataSource={slides} pagination={false} locale={{ emptyText: 'Loading/None' }}>
+		<Table rowKey="position" dataSource={slides} pagination={false} locale={{ emptyText: 'Loading/None' }} rowClassName={(event, index) => index === 0 ? 'current-row' : ''}>
 			<Table.Column title="Slide" dataIndex="src" width="10rem" render={val => <div style={{ textAlign: 'center' }}><Image src={val} alt="Slide Image" height="5rem" /></div>} />
 			<Table.Column title="ID" dataIndex="id" width="2rem" />
 			<Table.Column title="Description" dataIndex="description" key="description" />
@@ -109,14 +109,10 @@ export default function Slides({ type }) {
 	return (
 		<>
 			<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-				<Space>
-					<Button onClick={onPreviousSlide}>Previous { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
-					<Button type="primary" onClick={onAdvanceSlide}>Next { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
-					<Button onClick={onPauseSlides}>{ paused ? 'Resume' : 'Pause' }</Button>
-				</Space>
 				<div>
-					<label style={{ marginRight: '0.5rem' }}>Default Slide Duration (s)</label>
-					<InputNumber />
+					<Button type="primary" style={{ marginRight: '1rem' }}onClick={onPauseSlides}>{ paused ? 'Resume' : 'Pause' }</Button>
+					<Button style={{ marginRight: '0.2rem' }}onClick={onPreviousSlide}>Previous { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
+					<Button onClick={onAdvanceSlide}>Next { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
 				</div>
 			</div>
 			<SlideTable type={type} slides={slides} />

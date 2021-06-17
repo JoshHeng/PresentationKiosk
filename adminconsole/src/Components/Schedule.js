@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Collapse, Table } from 'antd';
 import socket from '../socket';
-import styles from './Schedule.module.css';
 
 export default function Schedule() {
 	const [ data, setData ] = useState(null);
@@ -22,7 +21,7 @@ export default function Schedule() {
 			</div>
 			<Collapse style={{ marginTop: '1rem' }}>
 				<Collapse.Panel header="Events" key="1">
-					<Table dataSource={data && data.events ? data.events : []} locale={{ emptyText: 'Loading/None' }} rowKey="id" pagination={false} rowClassName={(event, index) => data.currentEventIndex === index ? styles.current : ''}>
+					<Table dataSource={data && data.events ? data.events : []} locale={{ emptyText: 'Loading/None' }} rowKey="id" pagination={false} rowClassName={(event, index) => data.currentEventIndex === index ? 'current-row' : ''}>
 						<Table.Column title="Countdown Time" dataIndex="startsAt" render={val => (new Date(val*1000).toLocaleTimeString())} />
 						<Table.Column title="Time" dataIndex="time" />
 						<Table.Column title="Title" dataIndex="title" />
