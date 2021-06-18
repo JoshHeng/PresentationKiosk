@@ -31,7 +31,7 @@ export default function Slides() {
 				</div>
 			)) }
 			<div className={styles.cover} style={{ opacity: cover ? 1 : 0 }}>
-				<img src="%PUBLIC_URL%/images/logo.png" alt="Logo" />
+				<img src={`${process.env.PUBLIC_URL}/images/logo.png`} alt="Logo" />
 			</div>
 		</div>
 	);

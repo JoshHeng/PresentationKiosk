@@ -12,7 +12,7 @@ export default function Tweet({ socialData }) {
 					<p className={styles.name}>{socialData.author.name || '@' + socialData.author.username}</p>
 					{ socialData.type === 'tweet' && <span className={styles.handle}>@{socialData.author.username}</span> }
 				</div>
-				{ socialData.type === 'tweet' ? <TwitterIcon /> : <img src="%PUBLIC_URL%/images/instagram.jpg" alt="Instagram logo" />}
+				{ socialData.type === 'tweet' ? <TwitterIcon /> : <img src={`${process.env.PUBLIC_URL}/images/instagram.jpg`} alt="Instagram logo" />}
 			</div>
 			
 			<p>{socialData.tweet || socialData.content}</p>

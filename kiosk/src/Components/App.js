@@ -50,7 +50,7 @@ function App() {
 				<Slides />
 				<div className={styles.sidebar}>
 					<div className={styles.logo}>
-						<img src="%PUBLIC_URL%/images/logo.png" alt="Logo" />
+						<img src={`${process.env.PUBLIC_URL}/images/logo.png`} alt="Logo" />
 					</div>
 					<Schedule />
 				</div>

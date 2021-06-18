@@ -109,7 +109,7 @@ function App() {
 				<Col span={12}>
 					<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
 						<h1 style={{ margin: 0 }}>Admin Console - Presentation Kiosk</h1>
-						<img src="%PUBLIC_URL%/logo.png" alt="Logo" style={{ maxHeight: '3rem' }} />
+						<img src={`${process.env.PUBLIC_URL}/images/logo.png`} alt="Logo" style={{ maxHeight: '3rem' }} />
 					</div>
 
 					<Card title="Global Mode" bordered={false}>
