@@ -291,7 +291,7 @@ function setGlobalMode(mode) {
 	switch (mode) {
 		case 'play':
 			if (oldMode === 'blank') io.to('kiosk').emit('slides.cover', false);
-			if (oldMode === 'blank') io.to('kiosk').emit('bottombar.cover', false);
+			if (oldMode === 'blank') io.to('kiosk').emit('bottombar.cover', config.bottombar.announcement || false);
 			runTogglePause = true;
 			break;
 
@@ -303,7 +303,7 @@ function setGlobalMode(mode) {
 
 		case 'pause':
 			if (oldMode === 'blank') io.to('kiosk').emit('slides.cover', false);
-			if (oldMode === 'blank') io.to('kiosk').emit('bottombar.cover', false);
+			if (oldMode === 'blank') io.to('kiosk').emit('bottombar.cover', config.bottombar.announcement || false);
 			if (oldMode === 'play') runTogglePause = true;
 			break;
 	}
@@ -334,6 +334,7 @@ io.on("connection", socket => {
 			socket.on('bottombar.request', () => {
 				socket.emit('bottombar.set', getSlideRelativeQueue(-1, 1, 'bottombar'));
 				if (config.globalMode === 'blank') socket.emit('bottombar.cover', '');
+				else if (config.bottombar.announcement) socket.emit('bottombar.cover', config.bottombar.announcement);
 			});
 			socket.on('music.ended', nextSong);
 
@@ -377,8 +378,29 @@ io.on("connection", socket => {
 			socket.on('bottombar.request', () => {
 				socket.emit('bottombar.set', getSlideRelativeQueue(0, 19, 'bottombar'));
 				if (config.bottombar.paused) socket.emit('bottombar.pause');
+				if (config.bottombar.announcement) socket.emit('bottombar.announcement', config.bottombar.announcement);
 			});
 			socket.on('bottombar.togglepause', () => toggleSlidesPaused('bottombar'));
+			socket.on('bottombar.announce', (text, callback) => {
+				if (!text && !config.bottombar.announcement) return callback('Please add something to announce');
+				if (text.length > 256) return callback('Announcement too long');
+				if (text === config.bottombar.announcement) return callback('Duplicate announcement');
+
+				if (!text) {
+					config.bottombar.announcement = '';
+					saveConfig();
+					if (config.globalMode !== 'blank') io.to('kiosk').emit('bottombar.cover', false);
+					io.to('adminconsole').emit('bottombar.announcement', null);
+					return callback();
+				}
+				else {
+					config.bottombar.announcement = text;
+					saveConfig();
+					if (config.globalMode !== 'blank') io.to('kiosk').emit('bottombar.cover', config.bottombar.announcement);
+					io.to('adminconsole').emit('bottombar.announcement', config.bottombar.announcement);
+					return callback();
+				}
+			});
 
 			socket.on('music.volume.set', volume => {
 				volume = parseInt(volume);

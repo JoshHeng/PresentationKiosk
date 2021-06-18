@@ -1,6 +1,23 @@
 import { useEffect, useState } from 'react';
-import { Table, Image, Button, Tag, Avatar } from 'antd';
+import { Table, Image, Button, Tag, Avatar, Input, message } from 'antd';
 import socket from '../socket';
+
+function BottomBarAnnouncement({ announcement }) {
+	const [ announcementText, setAnnouncementText ] = useState('');
+	function onToggle() {
+		socket.emit('bottombar.announce', announcementText, err => {
+			if (err) message.error(err);
+		});
+	}
+
+	return (
+		<div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+			<label style={{ marginRight: '0.5rem' }}>Announcement</label>
+			<Input maxLength={256} value={announcement || announcementText} onChange={e => setAnnouncementText(e.target.value)} disabled={!!announcement} />
+			<Button type="primary" style={{ marginLeft: '0.1rem' }} onClick={onToggle}>{ announcement ? 'Clear' : 'Show' }</Button>
+		</div>
+	);
+}
 
 function BottomBarTag({ type }) {
 	switch (type) {
@@ -67,12 +84,14 @@ function SlideTable({ type, slides }) {
 export default function Slides({ type, disabled }) {
 	const [ slides, setSlides ] = useState([]);
 	const [ paused, setPaused ] = useState(false);
+	const [ announcement, setAnnouncement ] = useState(null);
 
 	useEffect(() => {
 		if (type === 'bottombar') {
 			socket.on('bottombar.set', _slides => setSlides(_slides));
 			socket.on('bottombar.pause', () => setPaused(true));
 			socket.on('bottombar.resume', () => setPaused(false));
+			socket.on('bottombar.announcement', val => setAnnouncement(val));
 		}
 		else {
 			socket.on('slides.set', _slides => setSlides(_slides));
@@ -90,6 +109,7 @@ export default function Slides({ type, disabled }) {
 			socket.off('bottombar.resume');
 			socket.off('bottombar.set');
 			socket.off('slides.set');
+			socket.off('bottombar.announcement')
 		}
 	}, [type]);
 
@@ -116,6 +136,8 @@ export default function Slides({ type, disabled }) {
 				</div>
 				<Button style={{ marginLeft: 'auto' }} disabled={disabled}>Edit</Button>
 			</div>
+
+			{ type === 'bottombar' && <BottomBarAnnouncement announcement={announcement} /> }
 			<SlideTable type={type} slides={slides} />
 		</>
 	);

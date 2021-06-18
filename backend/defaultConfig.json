@@ -209,7 +209,8 @@
 			}
 		},
 		"duration": 12000,
-		"paused": false
+		"paused": false,
+		"announcement": ""
 	},
 	"schedule": {
 		"events": [
