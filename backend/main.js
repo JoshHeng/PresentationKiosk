@@ -161,12 +161,10 @@ function previousSlide(slideSet = 'slides') {
 		advanceSlideTimeout = null;
 	}
 
-	const currentSlideKey = config[slideSet].queues.main.items[config[slideSet].queues.main.position];
-	if (currentSlideKey.startsWith('queue.')) {
-		const queueKey = currentSlideKey.slice(6);
-
-		config[slideSet].queues[queueKey].position -= 1;
-		if (config[slideSet].queues[queueKey].position < 0) config[slideSet].queues[queueKey].position = config[slideSet].queues[queueKey].items.length - 1;
+	const lastSlide = getSlideRelativeQueue(-1, -1, slideSet)[0];
+	if (lastSlide.queue) {
+		config[slideSet].queues[lastSlide.queue].position -= 1;
+		if (config[slideSet].queues[lastSlide.queue].position < 0) config[slideSet].queues[lastSlide.queue].position = config[slideSet].queues[lastSlide.queue].items.length - 1;
 	}
 
 	config[slideSet].queues.main.position -= 1;
