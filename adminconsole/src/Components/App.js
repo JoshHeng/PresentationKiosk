@@ -100,6 +100,9 @@ function App() {
 			}
 		});
 	}
+	function openKiosk() {
+		window.open(process.env.REACT_APP_KIOSK_URL, "kiosk", "left=0,top=0,width=1920,height=1080,menubar=off,toolbar=off,location=off,status=off,scrollbars=off")
+	}
 
 	if (!loggedIn || loggedIn < 2) return <Login attemptLogin={attemptLogin} loading={loggedIn === 1} invalidCredentials={loggedIn === -1} />;
 
@@ -113,6 +116,7 @@ function App() {
 					</div>
 
 					<Card title="Global Mode" bordered={false}>
+						<Button style={{ float: 'right' }} onClick={openKiosk}>Open Kiosk</Button>
 						<Radio.Group value={globalMode} onChange={event => socket.emit('globalmode.set', event.target.value)}>
 							<Radio.Button value="play">Play</Radio.Button>
 							<Radio.Button value="pause">Pause</Radio.Button>
