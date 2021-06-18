@@ -3,7 +3,7 @@ import { Button, Card, Table } from 'antd';
 import socket from '../socket';
 import EditableSchedule from './EditableSchedule';
 
-export default function Schedule() {
+export default function Schedule({ disabled }) {
 	const [ data, setData ] = useState(null);
 	const [ editing, setEditing ] = useState(false);
 
@@ -17,10 +17,10 @@ export default function Schedule() {
 	return (
 		<Card title="Schedule" bordered={false}>
 			<div style={{ display: 'flex'}}>
-				<Button style={{ marginRight: '1rem' }} onClick={() => socket.emit('schedule.toggleCountdown')}>{ data && data.showCountdown ? 'Hide' : 'Show' } Time Remaining</Button>
-				<Button style={{ marginRight: '0.2rem' }} disabled={data && !data.currentEventIndex} onClick={() => socket.emit('schedule.previous')}>Previous Event</Button>
-				<Button type="primary" disabled={data && data.currentEventIndex + 1 >= data.events.length} onClick={() => socket.emit('schedule.next')}>Next Event</Button>
-				<Button style={{ marginLeft: 'auto' }} onClick={() => setEditing(true)}>Edit</Button>
+				<Button style={{ marginRight: '1rem' }} onClick={() => socket.emit('schedule.toggleCountdown')} disabled={disabled}>{ data && data.showCountdown ? 'Hide' : 'Show' } Time Remaining</Button>
+				<Button style={{ marginRight: '0.2rem' }} disabled={disabled || (data && !data.currentEventIndex)} onClick={() => socket.emit('schedule.previous')}>Previous Event</Button>
+				<Button type="primary" disabled={disabled || (data && data.currentEventIndex + 1 >= data.events.length)} onClick={() => socket.emit('schedule.next')}>Next Event</Button>
+				<Button style={{ marginLeft: 'auto' }} onClick={() => setEditing(true)} disabled={disabled}>Edit</Button>
 			</div>
 
 			<h4 style={{ marginTop: '1rem' }}>Events</h4>

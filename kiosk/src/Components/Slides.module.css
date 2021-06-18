@@ -39,3 +39,17 @@
 	object-fit: contain;
 	z-index: 1;
 }
+.cover {
+	z-index: 4;
+	transition: opacity .8s;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: var(--logo-bg);
+	opacity: 0;
+}

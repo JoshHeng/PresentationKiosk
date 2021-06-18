@@ -64,7 +64,7 @@ function SlideTable({ type, slides }) {
 	);
 }
 
-export default function Slides({ type }) {
+export default function Slides({ type, disabled }) {
 	const [ slides, setSlides ] = useState([]);
 	const [ paused, setPaused ] = useState(false);
 
@@ -110,11 +110,11 @@ export default function Slides({ type }) {
 		<>
 			<div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
 				<div>
-					<Button type="primary" style={{ marginRight: '1rem' }}onClick={onPauseSlides}>{ paused ? 'Resume' : 'Pause' }</Button>
-					<Button style={{ marginRight: '0.2rem' }}onClick={onPreviousSlide}>Previous { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
-					<Button onClick={onAdvanceSlide}>Next { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
+					<Button type="primary" style={{ marginRight: '1rem' }} onClick={onPauseSlides} disabled={disabled}>{ paused ? 'Resume' : 'Pause' }</Button>
+					<Button style={{ marginRight: '0.2rem' }} onClick={onPreviousSlide} disabled={disabled}>Previous { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
+					<Button onClick={onAdvanceSlide} disabled={disabled}>Next { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
 				</div>
-				<Button style={{ marginLeft: 'auto' }}>Edit</Button>
+				<Button style={{ marginLeft: 'auto' }} disabled={disabled}>Edit</Button>
 			</div>
 			<SlideTable type={type} slides={slides} />
 		</>

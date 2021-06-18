@@ -122,5 +122,6 @@
 		"currentIndex": 0,
 		"volume": 0.3,
 		"paused": false
-	}
+	},
+	"globalMode": "play"
 }

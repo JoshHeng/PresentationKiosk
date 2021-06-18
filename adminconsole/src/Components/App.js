@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Row, Col, Card, Button, Slider, Tabs, message } from 'antd';
+import { Row, Col, Card, Button, Slider, Tabs, message, Radio } from 'antd';
 import SlidesPreview from './SlidesPreview';
 import Login from './Login';
 import Schedule from './Schedule'
@@ -7,9 +7,9 @@ import socket from '../socket';
 
 function App() {
 	const [ loggedIn, setLoggedIn ] = useState(1);
+	const [ globalMode, setGlobalMode ] = useState('play');
 	const [ localVolume, setLocalVolume ] = useState(5);
 	const [ musicStatus, setMusicStatus ] = useState({ volume: 5, paused: false });
-
 
 	useEffect(() => {
 		socket.on('connect', () => {
@@ -59,6 +59,9 @@ function App() {
 			return status;
 		}));
 
+		socket.on('globalmode.change', mode => setGlobalMode(mode));
+		socket.emit('globalmode.request');
+
 		return () => {
 			socket.off('connect');
 			socket.off('kiosk.connected');
@@ -68,6 +71,7 @@ function App() {
 			socket.off('music.volume');
 			socket.off('music.pause');
 			socket.off('music.resume');
+			socket.off('globalmode.change');
 		}
 	}, []);
 
@@ -108,27 +112,35 @@ function App() {
 						<img src="/images/logo.png" alt="Logo" style={{ maxHeight: '3rem' }} />
 					</div>
 
+					<Card title="Global Mode" bordered={false}>
+						<Radio.Group value={globalMode} onChange={event => socket.emit('globalmode.set', event.target.value)}>
+							<Radio.Button value="play">Play</Radio.Button>
+							<Radio.Button value="pause">Pause</Radio.Button>
+							<Radio.Button value="blank">Blank</Radio.Button>
+						</Radio.Group>
+					</Card>
+
 					<Card title="Music" bordered={false}>
 						<div>
-							<Button type="primary" style={{ marginRight: '0.5rem' }} onClick={() => socket.emit('music.toggle')}>{ musicStatus.paused ? 'Resume' : 'Pause' }</Button>
-							<Button onClick={() => socket.emit('music.skip')}>Skip</Button>
+							<Button type="primary" style={{ marginRight: '0.5rem' }} onClick={() => socket.emit('music.toggle')} disabled={globalMode !== 'play'}>{ musicStatus.paused ? 'Resume' : 'Pause' }</Button>
+							<Button onClick={() => socket.emit('music.skip')} disabled={globalMode !== 'play'}>Skip</Button>
 						</div>
 						<div style={{ marginTop: '1rem' }}>
 							<label>Volume</label>
-							<Slider min={0} max={100} onAfterChange={() => socket.emit('music.volume.set', localVolume)} value={localVolume} onChange={val => setLocalVolume(val)} />
+							<Slider min={0} max={100} onAfterChange={() => socket.emit('music.volume.set', localVolume)} value={localVolume} onChange={val => setLocalVolume(val)} disabled={globalMode !== 'play'} />
 						</div>
 					</Card>
 
-					<Schedule />
+					<Schedule disabled={globalMode !== 'play'} />
 					
 				</Col>
 				<Col span={12}>
 					<Tabs defaultActiveKey="slides">
 						<Tabs.TabPane tab="Slides" key="slides" forceRender>
-							<SlidesPreview />
+							<SlidesPreview disabled={globalMode !== 'play'} />
 						</Tabs.TabPane>
-						<Tabs.TabPane tab="Bottom Bar" key="bar">
-							<SlidesPreview type="bottombar" forceRender />
+						<Tabs.TabPane tab="Bottom Bar" key="bar" forceRender>
+							<SlidesPreview type="bottombar" disabled={globalMode !== 'play'} />
 						</Tabs.TabPane>
 					</Tabs>
 				</Col>

@@ -136,15 +136,15 @@ function advanceSlide(slideSet = 'slides') {
 	if (slideSet === 'bottombar') updateBottombarSlides();
 	else updateKioskSlides();
 
-	if (!config[slideSet].paused) {
+	if (config.globalMode === 'play' && !config[slideSet].paused) {
 		const currentSlide = getSlideRelativeQueue(0, 0, slideSet)[0];
 
 		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), currentSlide.duration);
 		else advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
 	}
 }
-if (!config.slides.paused) advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
-if (!config.bottombar.paused) advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), config.bottombar.duration);
+if (config.globalMode === 'play' && !config.slides.paused) advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
+if (config.globalMode === 'play' && !config.bottombar.paused) advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), config.bottombar.duration);
 
 function previousSlide(slideSet = 'slides') {
 	if (slideSet === 'slides' && advanceSlideTimeout) {
@@ -175,18 +175,20 @@ function previousSlide(slideSet = 'slides') {
 	if (slideSet === 'bottombar') updateBottombarSlides();
 	else updateKioskSlides();
 
-	if (!config[slideSet].paused) {
+	if (config.globalMode === 'play' && !config[slideSet].paused) {
 		const currentSlide = getSlideRelativeQueue(0, 0, slideSet)[0];
 
 		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), currentSlide.duration);
 		else advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
 	}
 }
-function toggleSlidesPaused(slideSet = 'slides') {
-	config[slideSet].paused = !config[slideSet].paused;
-	saveConfig();
+function toggleSlidesPaused(slideSet = 'slides', toggle = true) {
+	if (toggle) {
+		config[slideSet].paused = !config[slideSet].paused;
+		saveConfig();
+	}
 
-	if (config[slideSet].paused) {
+	if (config.globalMode !== 'play' || config[slideSet].paused) {
 		if (slideSet === 'slides' && advanceSlideTimeout) {
 			clearTimeout(advanceSlideTimeout);
 			advanceSlideTimeout = null;
@@ -210,6 +212,22 @@ function toggleSlidesPaused(slideSet = 'slides') {
 	}
 }
 
+function toggleMusicPause(toggle = true) {
+	if (toggle) {
+		config.music.paused = !config.music.paused;
+		saveConfig();
+	}
+
+	if (config.globalMode !== 'play' || config.music.paused) {
+		io.to('kiosk').emit('music.pause');
+		io.to('adminconsole').emit('music.pause');
+	}
+	else {
+		io.to('kiosk').emit('music.resume');
+		io.to('adminconsole').emit('music.resume');
+	}
+}
+
 function nextSong() {
 	config.music.currentIndex += 1;
 	if (config.music.currentIndex >= config.music.queue.length) config.music.currentIndex = 0;
@@ -222,7 +240,7 @@ function nextSong() {
 
 function updateSchedule() {
 	io.to('kiosk').emit('schedule.set', {
-		showCountdown: config.schedule.showCountdown,
+		showCountdown: config.globalMode === 'play' && config.schedule.showCountdown,
 		events: config.schedule.events.slice(config.schedule.currentEventIndex, config.schedule.currentEventIndex + 5)
 	});
 	io.to('adminconsole').emit('schedule.set', config.schedule);
@@ -255,6 +273,45 @@ function checkEvents(events) {
 	}
 }
 
+function setGlobalMode(mode) {
+	if (mode !== 'play' && mode !== 'pause' && mode !== 'blank') return;
+	if (config.globalMode === mode) return;
+
+	const oldMode = config.globalMode;
+	config.globalMode = mode;
+	saveConfig();
+
+	io.to('adminconsole').emit('globalmode.change', mode);
+	let runTogglePause = false;
+
+	switch (mode) {
+		case 'play':
+			if (oldMode === 'blank') io.to('kiosk').emit('slides.cover', false);
+			if (oldMode === 'blank') io.to('kiosk').emit('bottombar.cover', false);
+			runTogglePause = true;
+			break;
+
+		case 'blank':
+			io.to('kiosk').emit('slides.cover', true);
+			io.to('kiosk').emit('bottombar.cover', '');
+			if (oldMode === 'play') runTogglePause = true;
+			break;
+
+		case 'pause':
+			if (oldMode === 'blank') io.to('kiosk').emit('slides.cover', false);
+			if (oldMode === 'blank') io.to('kiosk').emit('bottombar.cover', false);
+			if (oldMode === 'play') runTogglePause = true;
+			break;
+	}
+
+	if (runTogglePause) {
+		toggleSlidesPaused('slides', false);
+		toggleSlidesPaused('bottombar', false);
+		toggleMusicPause(false);
+		updateSchedule();
+	}
+}
+
 io.on("connection", socket => {
 	console.log('Connection Established');
 
@@ -266,19 +323,25 @@ io.on("connection", socket => {
 			socket.broadcast.to('adminconsole').emit('kiosk.connected');
 			console.log('Kiosk connected');
 
-			socket.on('slides.request', () => socket.emit('slides.set', getSlideRelativeQueue(-1, 1)));
-			socket.on('bottombar.request', () => socket.emit('bottombar.set', getSlideRelativeQueue(-1, 1, 'bottombar')));
+			socket.on('slides.request', () => {
+				socket.emit('slides.set', getSlideRelativeQueue(-1, 1));
+				if (config.globalMode === 'blank') socket.emit('slides.cover', true);
+			});
+			socket.on('bottombar.request', () => {
+				socket.emit('bottombar.set', getSlideRelativeQueue(-1, 1, 'bottombar'));
+				if (config.globalMode === 'blank') socket.emit('bottombar.cover', '');
+			});
 			socket.on('music.ended', nextSong);
 
 			socket.emit('music.volume', config.music.volume, () => {
 				socket.emit('music.load', config.music.queue[config.music.currentIndex], () => {
-					socket.emit('music.play', !!config.music.paused, () => {
+					socket.emit('music.play', !!(config.music.paused || config.globalMode !== 'play'), () => {
 						socket.emit('music.load', config.music.queue[config.music.currentIndex + 1 >= config.music.queue.length ? 0 : config.music.currentIndex + 1]);
 					});
 				});
 			});
 			socket.on('schedule.request', () => socket.emit('schedule.set', {
-				showCountdown: config.schedule.showCountdown,
+				showCountdown:  config.globalMode === 'play' && config.schedule.showCountdown,
 				events: config.schedule.events.slice(config.schedule.currentEventIndex, config.schedule.currentEventIndex + 5)
 			}));
 
@@ -293,6 +356,9 @@ io.on("connection", socket => {
 
 			socket.broadcast.to('adminconsole').emit('adminconsole.connected');
 			console.log('Admin Console connected');
+
+			socket.on('globalmode.set', mode => setGlobalMode(mode));
+			socket.on('globalmode.request', () => socket.emit('globalmode.change', config.globalMode))
 
 			socket.on('slides.next', () => advanceSlide());
 			socket.on('slides.previous', () => previousSlide());
@@ -321,19 +387,7 @@ io.on("connection", socket => {
 				io.to('adminconsole').emit('music.volume', config.music.volume * 100);
 			});
 			socket.on('music.skip', nextSong);
-			socket.on('music.toggle', () => {
-				config.music.paused = !config.music.paused;
-				saveConfig();
-
-				if (config.music.paused) {
-					io.to('kiosk').emit('music.pause');
-					io.to('adminconsole').emit('music.pause');
-				}
-				else {
-					io.to('kiosk').emit('music.resume');
-					io.to('adminconsole').emit('music.resume');
-				}
-			});
+			socket.on('music.toggle', () => toggleMusicPause());
 
 			socket.on('schedule.request', () => socket.emit('schedule.set', config.schedule));
 			socket.on('schedule.toggleCountdown', () => {

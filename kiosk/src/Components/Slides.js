@@ -5,16 +5,21 @@ import socket from '../socket';
 export default function Slides() {
 	const [ wheelRotation, setWheelRotation ] = useState(0);
 	const [ activeSlides, setActiveSlides ] = useState([]);
+	const [ cover, setCover ] = useState(false);
 
 	useEffect(() => {
 		socket.on('slides.set', slides => {
 			setActiveSlides(slides);
 			setWheelRotation(rotation => rotation += 90);
 		});
+		socket.on('slides.cover', _cover => setCover(_cover));
 
 		socket.emit('slides.request');
 
-		return () => socket.off('slides.set');
+		return () =>{
+			socket.off('slides.set');
+			socket.off('slides.cover');
+		}
 	}, []);
 
 	return (
@@ -25,6 +30,9 @@ export default function Slides() {
 					<img src={slide.src} alt="Slide" />
 				</div>
 			)) }
+			<div className={styles.cover} style={{ opacity: cover ? 1 : 0 }}>
+				<img src="/images/logo.png" alt="Logo" />
+			</div>
 		</div>
 	);
 }
