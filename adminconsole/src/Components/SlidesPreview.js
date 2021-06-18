@@ -6,7 +6,7 @@ import SocialsEditor from './SocialsEditor';
 function BottomBarAnnouncement({ announcement }) {
 	const [ announcementText, setAnnouncementText ] = useState('');
 	function onToggle() {
-		socket.emit('bottombar.announce', announcementText, err => {
+		socket.emit('bottombar.announce', announcement ? false : announcementText, err => {
 			if (err) message.error(err);
 		});
 	}
