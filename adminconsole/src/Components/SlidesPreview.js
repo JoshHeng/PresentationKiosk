@@ -29,6 +29,8 @@ function BottomBarTag({ type }) {
 			return <Tag color="magenta">Instagram</Tag>;
 		case 'blank':
 			return <Tag>Blank</Tag>;
+		case 'socials':
+			return <Tag>Socials</Tag>
 		default:
 			return <Tag>{type}</Tag>
 	}
@@ -53,6 +55,7 @@ function BottomBarSlideContent({ item }) {
 				</div>
 			)
 		case 'blank':
+		case 'socials':
 			return '';
 		default:
 			return 'Invalid Type';
@@ -134,7 +137,7 @@ export default function Slides({ type, disabled }) {
 					<Button style={{ marginRight: '0.2rem' }} onClick={onPreviousSlide} disabled={disabled}>Previous { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
 					<Button onClick={onAdvanceSlide} disabled={disabled}>Next { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
 				</div>
-				<Button style={{ marginLeft: 'auto' }} disabled={disabled}>Edit</Button>
+				{ type === 'bottombar' && <Button style={{ marginLeft: 'auto' }} disabled={disabled}>Edit Socials</Button> }
 			</div>
 
 			{ type === 'bottombar' && <BottomBarAnnouncement announcement={announcement} /> }

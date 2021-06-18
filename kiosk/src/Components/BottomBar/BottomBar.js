@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './BottomBar.module.css';
 import Social from './Social';
 import socket from '../../socket';
+import TwitterIcon from '../../Resources/twitterIcon';
 
 function SlideContent({ slide }) {
 	switch (slide.type) {
@@ -10,8 +11,16 @@ function SlideContent({ slide }) {
 			return <Social socialData={slide} />;
 		case 'text':
 			return <div className={styles.contentBox}>{ slide.text }</div>
+		case 'socials':
+			return (
+				<div className={`${styles.contentBox} ${styles.socialsBox}`}>
+					<TwitterIcon /><strong>@YouthSTEM2030</strong>
+					<img src={`${process.env.PUBLIC_URL}/images/instagram.jpg`} alt="Instagram logo" /><strong>@youthstem2030</strong>
+					<strong style={{ marginLeft: 'auto', fontSize: '1.5em' }}>#YouthSTEMMattersConf</strong>
+				</div>
+			);
 		default:
-			return <></>;
+			return <div></div>;
 	}
 }
 

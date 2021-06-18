@@ -39,3 +39,14 @@
 	bottom: 0;
 	transition: opacity .8s;
 }
+
+.socialsBox {
+	font-size: 1.5em;
+}
+.socialsBox > svg {
+	height: 2.3rem;
+}
+.socialsBox > img {
+	height: 3rem;
+	margin-left: 1rem;
+}
