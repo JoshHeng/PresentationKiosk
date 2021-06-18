@@ -6,38 +6,133 @@
 				"description": "About YSM",
 				"duration": 8000
 			},
-			"about-join": {
-				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-join.png",
-				"description": "Join the Team"
-			},
-			"about-quest": {
-				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-quest.png",
-				"description": "Research Conference Quest"
+			"about-history": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-history.png",
+				"description": "History of YSM"
 			},
 			"about-read": {
 				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-read.png",
 				"description": "Read our Articles"
 			},
-			"about-sdgs": {
-				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-sdgs.png",
-				"description": "SDGs"
+			"about-join": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-join.png",
+				"description": "Join the Team"
 			},
 			"about-social": {
 				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-social.png",
 				"description": "Socials"
 			},
+			"about-quest": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-quest.png",
+				"description": "Research Conference Quest"
+			},
+			"about-sdgs": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-sdgs.png",
+				"description": "SDGs"
+			},
+		
+			"sponsor-aberdeen": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/sponsor-aberdeen.png",
+				"description": "Sponsor - University of Aberdeen"
+			},
+			"sponsor-jameshutton": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/sponsor-jameshutton.png",
+				"description": "Sponsor - James Hutton Institute"
+			},
+			"sponsor-rsk": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/sponsor-rsk.png",
+				"description": "Sponsor - RSK"
+			  },
+			  
+			"hopin-expo": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/hopin-expo.png",
+				"description": "Hopin Expo"
+			  },
 			"hopin-chats": {
 				"src": "https://assets.joshheng.co.uk/ysmrc/slides/hopin-chats.png",
 				"description": "Hopin Chats"
+			},
+		
+			"exhibition-magnum": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-magnum.png",
+				"description": "Exhibition - magnum"
+			},
+			"exhibition-buildingbridges": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-buildingbridges.png",
+				"description": "Exhibition - buildingbridges"
+			},
+			"exhibition-bb4aii": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-bb4aii.png",
+				"description": "Exhibition - bb4aii"
+			},
+			"exhibition-naturaldisasters": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-naturaldisasters.png",
+				"description": "Exhibition - naturaldisasters"
+			},
+			"exhibition-safetysystem": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-safetysystem.png",
+				"description": "Exhibition - safetysystem"
+			},
+			"exhibition-polyethylenebacteria": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-polyethylenebacteria.png",
+				"description": "Exhibition - polyethylenebacteria"
+			},
+			"exhibition-sixfeetapart": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-sixfeetapart.png",
+				"description": "Exhibition - sixfeetapart"
+			},
+			"exhibition-vaccinedevelopment": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-vaccinedevelopment.png",
+				"description": "Exhibition - vaccinedevelopment"
+			},
+			"exhibition-circulareconomy": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-circulareconomy.png",
+				"description": "Exhibition - circulareconomy"
+			},
+			"exhibition-aerospacemedicine": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-aerospacemedicine.png",
+				"description": "Exhibition - aerospacemedicine"
+			},
+			"exhibition-cycloplas2": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-cycloplas2.png",
+				"description": "Exhibition - cycloplas2"
+			},
+			"exhibition-spiraaer": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-spiraaer.png",
+				"description": "Exhibition - spiraaer"
+			},
+			"exhibition-alternativemask": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-alternativemask.png",
+				"description": "Exhibition - alternativemask"
+			},
+			"exhibition-climatechange": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-climatechange.png",
+				"description": "Exhibition - climatechange"
+			},
+			"exhibition-polycysticovarysyndrome": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-polycysticovarysyndrome.png",
+				"description": "Exhibition - polycysticovarysyndrome"
+			},
+			"exhibition-sustainableshopping": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/exhibition-sustainableshopping.png",
+				"description": "Exhibition - sustainableshopping"
 			}
 		},
 		"queues": {
 			"main": {
-				"items": ["queue.ysm"],
+				"items": ["queue.ysm", "queue.exhibitions", "queue.misc", "queue.exhibitions"],
 				"position": 0
 			},
 			"ysm": {
-				"items": ["about-about", "about-join", "about-quest", "about-read", "about-sdgs", "about-social", "hopin-chats"],
+				"items": ["about-about", "about-history", "about-join", "about-read", "about-sdgs", "about-social"],
+				"position": 0
+			},
+			"misc": {
+				"items": ["hopin-chats", "sponsor-aberdeen", "about-quest", "sponsor-jameshutton", "hopin-expo", "sponsor-rsk"],
+				"position": 0
+			},
+			"exhibitions": {
+				"items": ["exhibition-magnum", "exhibition-buildingbridges", "exhibition-bb4aii", "exhibition-naturaldisasters", "exhibition-safetysystem", "exhibition-polyethylenebacteria", "exhibition-sixfeetapart", "exhibition-vaccinedevelopment", "exhibition-circulareconomy", "exhibition-aerospacemedicine", "exhibition-cycloplas2", "exhibition-spiraaer", "exhibition-alternativemask", "exhibition-climatechange", "exhibition-polycysticovarysyndrome", "exhibition-sustainableshopping"],
 				"position": 0
 			}
 		},
@@ -70,11 +165,29 @@
 			},
 			"tweet-3": {
 				"type": "tweet",
-				"tweet": "We're pleased to support Youth STEM Matters (@YouthSTEM2030)'s first ever Research Conference⁠ Confetti ball",
+				"tweet": "We're pleased to support Youth STEM Matters (@YouthSTEM2030)'s first ever Research Conference⁠ 🎊",
 				"author": {
 					"name": "James Hutton Institute",
 					"username": "JamesHuttonInst",
 					"avatar": "https://pbs.twimg.com/profile_images/460775316764368898/td-BqrDU_400x400.jpeg"
+				}
+			},
+			"tweet-4": {
+				"type": "tweet",
+				"tweet": "📢 Youth STEM Matters (@YouthSTEM2030) is holding their first ever Research Conference!⁠ 🎊",
+				"author": {
+					"name": "Olivia Vigano",
+					"username": "vigano_olivia",
+					"avatar": "https://pbs.twimg.com/profile_images/1207573640658771970/QjqoBN2C_400x400.jpg"
+				}
+			},
+			"tweet-5": {
+				"type": "tweet",
+				"tweet": "📢 Youth STEM Matters (@YouthSTEM2030) is holding their first ever Research Conference!⁠ 🎊",
+				"author": {
+					"name": "Alison McKay",
+					"username": "alisonmckay",
+					"avatar": "https://pbs.twimg.com/profile_images/1404409535205421057/0de4Ircw_400x400.jpg"
 				}
 			},
 			"insta-1": {
@@ -91,7 +204,7 @@
 				"position": 0
 			},
 			"socials": {
-				"items": ["tweet-1", "tweet-2", "tweet-3", "insta-1"],
+				"items": ["tweet-1", "tweet-2", "tweet-3", "tweet-4", "tweet-5", "insta-1"],
 				"position": 0
 			}
 		},
