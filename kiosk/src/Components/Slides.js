@@ -24,7 +24,7 @@ export default function Slides() {
 
 	return (
 		<div className={styles.slides}>
-			<img className={styles.wheel} src="%PUBLIC_URL%/images/wheel.png" alt="Wheel" style={{ transform: `rotate(${wheelRotation}deg)` }} />
+			<img className={styles.wheel} src={`${process.env.PUBLIC_URL}/images/wheel.png`} alt="Wheel" style={{ transform: `rotate(${wheelRotation}deg)` }} />
 			{ activeSlides.map((slide, index) => (
 				<div className={styles.slide} key={slide.position} style={{ left: index < 1 ? 'calc(-100% - 2rem)' : ( index > 1 ? '100%' : '0')}}>
 					<img src={slide.src} alt="Slide" />

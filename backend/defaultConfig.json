@@ -4,7 +4,7 @@
 			"about-about": {
 				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-about.png",
 				"description": "About YSM",
-				"duration": 8000
+				"duration": 15000
 			},
 			"about-history": {
 				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-history.png",
@@ -136,7 +136,7 @@
 				"position": 0
 			}
 		},
-		"duration": 5000,
+		"duration": 10000,
 		"paused": false
 	},
 	"bottombar": {
@@ -208,7 +208,7 @@
 				"position": 0
 			}
 		},
-		"duration": 10000,
+		"duration": 12000,
 		"paused": false
 	},
 	"schedule": {
