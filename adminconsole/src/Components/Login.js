@@ -4,7 +4,7 @@ export default function Login({ attemptLogin, loading, invalidCredentials }) {
 	return (
 		<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#efefef', height: '100vh', paddingBottom: '10rem' }}>
 			<Card style={{ width: '30rem', textAlign: 'center' }}>
-				<img src="/images/logo.png" alt="Logo" style={{ maxHeight: '8rem', maxWidth: '25rem' }} />
+				<img src="%PUBLIC_URL%/images/logo.png" alt="Logo" style={{ maxHeight: '8rem', maxWidth: '25rem' }} />
 				<h1 style={{ margin: 0 }}>Admin Console Login</h1>
 
 				{ loading ? <p>Loading...</p> :
