@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Table, Image, Button, Tag, Avatar, Input, message } from 'antd';
 import socket from '../socket';
+import SocialsEditor from './SocialsEditor';
 
 function BottomBarAnnouncement({ announcement }) {
 	const [ announcementText, setAnnouncementText ] = useState('');
@@ -88,6 +89,7 @@ export default function Slides({ type, disabled }) {
 	const [ slides, setSlides ] = useState([]);
 	const [ paused, setPaused ] = useState(false);
 	const [ announcement, setAnnouncement ] = useState(null);
+	const [ editingSocials, setEditingSocials ] = useState(false);
 
 	useEffect(() => {
 		if (type === 'bottombar') {
@@ -137,7 +139,10 @@ export default function Slides({ type, disabled }) {
 					<Button style={{ marginRight: '0.2rem' }} onClick={onPreviousSlide} disabled={disabled}>Previous { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
 					<Button onClick={onAdvanceSlide} disabled={disabled}>Next { type === 'bottombar' ? 'Item' : 'Slide' }</Button>
 				</div>
-				{ type === 'bottombar' && <Button style={{ marginLeft: 'auto' }} disabled={disabled}>Edit Socials</Button> }
+				{ type === 'bottombar' && <>
+					<Button style={{ marginLeft: 'auto' }} disabled={disabled} onClick={() => setEditingSocials(true)}>Edit Socials</Button>
+					<SocialsEditor editing={editingSocials} onClose={() => setEditingSocials(false)} />
+				</> }
 			</div>
 
 			{ type === 'bottombar' && <BottomBarAnnouncement announcement={announcement} /> }
