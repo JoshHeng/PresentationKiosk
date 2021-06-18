@@ -12,14 +12,29 @@ h2 {
 	height: 100vh;
 }
 .kiosk main {
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 8rem;
+
 	display: grid;
 	flex-grow: 1;
 	grid-template-columns: auto 18rem;
 }
 .kiosk footer {
 	height: 8rem;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 .sidebar {
+	position: relative;
+	right: 0;
+	top: 0;
+	bottom: 0;
+
 	color: white;
 	display: flex;
 	flex-direction: column;

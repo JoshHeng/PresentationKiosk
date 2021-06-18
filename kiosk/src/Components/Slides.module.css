@@ -1,19 +1,24 @@
 .slides {
 	position: relative;
+	left: 0;
+	top: 0;
+
 	display: flex;
 	justify-content: center;
 	align-items: center;
 	
 	background-color: #efefef;
 	overflow: hidden;
+	max-height: calc(100vh - 8rem);
 }
 .wheel {
 	position: absolute;
-	width: 25rem;
-	left: -12.5rem;
-	top: -12.5rem;
+	width: 13rem;
+	left: -7rem;
+	top: -7rem;
 	transition: transform .5s;
 	z-index: 5;
+	opacity: .7;
 }
 .slide {
 	left: 0;
@@ -34,7 +39,7 @@
 	transition: left .5s;
 }
 .slide img {
-	max-width: 100%;
+	width: 100%;
 	max-height: calc(100vh - 8rem);
 	object-fit: contain;
 	z-index: 1;

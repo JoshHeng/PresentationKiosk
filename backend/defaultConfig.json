@@ -1,41 +1,44 @@
 {
 	"slides": {
 		"definitions": {
-			"1": {
-				"src": "https://www.havenresorts.com/uploads/9/8/7/9/98799368/published/16-9placeholder_59.png",
-				"description": "Placeholder",
-				"duration": 9000
+			"about-about": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-about.png",
+				"description": "About YSM",
+				"duration": 8000
 			},
-			"2": {
-				"src": "https://www.clevertech-group.com/assets/img/placeholder/16x9.jpg",
-				"description": "Placeholder 2"
+			"about-join": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-join.png",
+				"description": "Join the Team"
 			},
-			"3": {
-				"src": "https://randomfox.ca/images/66.jpg",
-				"description": "Fox 1"
+			"about-quest": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-quest.png",
+				"description": "Research Conference Quest"
 			},
-			"4": {
-				"src": "https://randomfox.ca/images/20.jpg",
-				"description": "Fox 2"
+			"about-read": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-read.png",
+				"description": "Read our Articles"
 			},
-			"5": {
-				"src": "https://randomfox.ca/images/30.jpg",
-				"description": "Fox 3"
+			"about-sdgs": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-sdgs.png",
+				"description": "SDGs"
 			},
-			"6": {
-				"src": "https://randomfox.ca/images/40.jpg",
-				"description": "Fox 4"
+			"about-social": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/about-social.png",
+				"description": "Socials"
+			},
+			"hopin-chats": {
+				"src": "https://assets.joshheng.co.uk/ysmrc/slides/hopin-chats.png",
+				"description": "Hopin Chats"
 			}
 		},
 		"queues": {
 			"main": {
-				"items": ["1", "2", "queue.foxes"],
+				"items": ["queue.ysm"],
 				"position": 0
 			},
-			"foxes": {
-				"items": ["4", "5", "3", "6"],
-				"position": 0,
-				"duration": 6000
+			"ysm": {
+				"items": ["about-about", "about-join", "about-quest", "about-read", "about-sdgs", "about-social", "hopin-chats"],
+				"position": 0
 			}
 		},
 		"duration": 5000,
@@ -43,7 +46,11 @@
 	},
 	"bottombar": {
 		"definitions": {
-			"1": {
+			"blank": {
+				"type": "blank",
+				"description": "Blank"
+			},
+			"tweet-1": {
 				"type": "tweet",
 				"tweet": "Really excited for this one - join us for a superb talk. #YouthSTEMMattersConf",
 				"author": {
@@ -52,7 +59,7 @@
 					"avatar": "https://pbs.twimg.com/profile_images/1118209723386466309/-dzSF-ax_400x400.jpg"
 				}
 			},
-			"2": {
+			"tweet-2": {
 				"type": "tweet",
 				"tweet": "Thanks a lot @YouthSTEM2030 for the opportunity to be a speaker. Join in on 19 June to watch.",
 				"author": {
@@ -61,7 +68,7 @@
 					"avatar": "https://pbs.twimg.com/profile_images/1397068497549729795/fLDirmix_400x400.jpg"
 				}
 			},
-			"3": {
+			"tweet-3": {
 				"type": "tweet",
 				"tweet": "We're pleased to support Youth STEM Matters (@YouthSTEM2030)'s first ever Research Conference⁠ Confetti ball",
 				"author": {
@@ -70,33 +77,25 @@
 					"avatar": "https://pbs.twimg.com/profile_images/460775316764368898/td-BqrDU_400x400.jpeg"
 				}
 			},
-			"4": {
-				"type": "blank",
-				"description": "Blank"
-			},
-			"5": {
+			"insta-1": {
 				"type": "instagrampost",
 				"content": "There's just 9️⃣ days to go until the first ever Youth STEM Matters Research Conference!⁠",
 				"author": {
 					"username": "youthstem2030"
 				}
-			},
-			"6": {
-				"type": "text",
-				"text": "Hello I like eating potatoes because they're really tasty. How about you?"
 			}
 		},
 		"queues": {
 			"main": {
-				"items": ["4", "6", "queue.tweets", "5"],
+				"items": ["blank", "queue.socials"],
 				"position": 0
 			},
-			"tweets": {
-				"items": ["1", "2", "3"],
+			"socials": {
+				"items": ["tweet-1", "tweet-2", "tweet-3", "insta-1"],
 				"position": 0
 			}
 		},
-		"duration": 5000,
+		"duration": 10000,
 		"paused": false
 	},
 	"schedule": {
@@ -104,14 +103,110 @@
 			{
 				"id": 1,
 				"startsAt": 1624104000,
-				"title": "Start",
+				"title": "Welcome",
 				"time": "1pm"
 			},
 			{
 				"id": 2,
+				"startsAt": 1624104480,
+				"title": "Youth STEM Matters - The Story So Far",
+				"time": "1:08pm"
+			},
+			{
+				"id": 3,
+				"startsAt": 1624104900,
+				"title": "Youth Presentation - Economy, Sustainability & Technology: A Necessity Demand",
+				"time": "1:15pm"
+			},
+			{
+				"id": 4,
+				"startsAt": 1624105500,
+				"title": "Youth Presentation - Innovation as a Pathway to the Future",
+				"time": "1:25pm"
+			},
+			{
+				"id": 5,
+				"startsAt": 1624106400,
+				"title": "Guest Speaker - Influencing Change Through Science",
+				"time": "1:40pm"
+			},
+			{
+				"id": 6,
 				"startsAt": 1624107600,
-				"title": "Event 2",
+				"title": "Making a Difference Through STEM Research Panel",
 				"time": "2pm"
+			},
+			{
+				"id": 7,
+				"startsAt": 1624110000,
+				"title": "Youth Presentation - 3D Prototyping an Alternate Mask for Kids",
+				"time": "2:40pm"
+			},
+			{
+				"id": 8,
+				"startsAt": 1624110600,
+				"title": "Youth Presentation - Sustainable Shopping",
+				"time": "2:50pm"
+			},
+			{
+				"id": 9,
+				"startsAt": 1624113000,
+				"title": "Guest Speaker - Challenges of Energy Storage: The Era of Batteries",
+				"time": "3:30pm"
+			},
+			{
+				"id": 10,
+				"startsAt": 1624113900,
+				"title": "Submit a Project Presentation",
+				"time": "3:45pm"
+			},
+			{
+				"id": 11,
+				"startsAt": 1624114800,
+				"title": "Submit a Project Q+A & Affiliation Presentation",
+				"time": "4pm"
+			},
+			{
+				"id": 12,
+				"startsAt": 1624116000,
+				"title": "Youth Presentation - Polycystic Ovary Syndrome and Epigenetics: Role of the Gut Microbiome",
+				"time": "4:20pm"
+			},
+			{
+				"id": 13,
+				"startsAt": 1624116600,
+				"title": "Youth Presentation - Isolation and Identification of Effective Polyethylene Degrading Bacterial Species from Galleria mellonella",
+				"time": "4:30pm"
+			},
+			{
+				"id": 14,
+				"startsAt": 1624117500,
+				"title": "Write an Article Presentation",
+				"time": "4:45pm"
+			},
+			{
+				"id": 15,
+				"startsAt": 1624118100,
+				"title": "Write an Article Q+A & Afiliation Q+A Open",
+				"time": "4:55pm"
+			},
+			{
+				"id": 16,
+				"startsAt": 1624119300,
+				"title": "Guest Speaker - How Structural Biology Paved the Way for COVID-19 Vaccine Development",
+				"time": "5:15pm"
+			},
+			{
+				"id": 17,
+				"startsAt": 1624120200,
+				"title": "Awards Ceremony",
+				"time": "5:30pm"
+			},
+			{
+				"id": 18,
+				"startsAt": 1624121700,
+				"title": "Closing Remarks",
+				"time": "5:55pm"
 			}
 		],
 		"showCountdown": true,

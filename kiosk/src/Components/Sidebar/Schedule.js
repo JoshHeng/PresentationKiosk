@@ -27,7 +27,7 @@ export default function Schedule() {
 				{ events.length === 0 ? 'None' : 
 					<div>
 						{ events.map(event => <div className={styles.event} key={event.id}>
-							<strong>{ event.time }</strong> - { event.title }
+							<strong>{ event.time }</strong><br />{ event.title }
 						</div>)}
 					</div>
 				}
