@@ -41,15 +41,15 @@ export default function EditableSchedule({ editing, onClose, oldValue }) {
 					let _data = data.slice();
 					_data[index] = Object.assign({}, data[index], { startsAt: newVal.unix() });
 					setData(_data);
-				}} allowClear={false} />} />
-				<Table.Column title="Time" dataIndex="time" render={(value, event, index) => <Input maxLength={16} value={value} onChange={event => {
+				}} allowClear={false} />} width="7rem" />
+				<Table.Column title="Time" dataIndex="time" render={(value, event, index) => <Input maxLength={32} value={value} onChange={event => {
 					let _data = data.slice();
-					_data[index] = Object.assign({}, data[index], { time: event.target.value.slice(0, 16) });
+					_data[index] = Object.assign({}, data[index], { time: event.target.value.slice(0, 32) });
 					setData(_data);
-				}} />} />
-				<Table.Column title="Title" dataIndex="title" render={(value, event, index) => <Input maxLength={64} value={value} onChange={event => {
+				}} />} width="8rem" />
+				<Table.Column title="Title" dataIndex="title" render={(value, event, index) => <Input maxLength={256} value={value} onChange={event => {
 					let _data = data.slice();
-					_data[index] = Object.assign({}, data[index], { title: event.target.value.slice(0, 64) });
+					_data[index] = Object.assign({}, data[index], { title: event.target.value.slice(0, 256) });
 					setData(_data);
 				}} />} />
 				<Table.Column dataIndex="delete" render={(value, event, index) => <Space>
@@ -59,7 +59,7 @@ export default function EditableSchedule({ editing, onClose, oldValue }) {
 						setData(_data);	
 					}} />
 					<Button icon={<PlusOutlined />} onClick={() => addRow(index)} />
-				</Space> } />
+				</Space> } width="2rem" />
 			</Table>
 		</Modal>
 	);

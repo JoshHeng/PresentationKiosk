@@ -54,6 +54,7 @@ function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 	const slides = [];
 	const currentAbsolutePosition = slideSet === 'bottombar' ? currentAbsoluteBottomBarPosition : currentAbsoluteSlidePosition;
 	let queuePositionModifiers = {};
+	let currentQueue;
 	
 	if (currentPosition <= 0) {
 		currentPosition = 0;
@@ -61,6 +62,7 @@ function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 			const slideKey = getSlideQueueRelativeKey(config[slideSet].queues.main, currentPosition);
 			if (slideKey.startsWith('queue.')) {
 				const queueKey = slideKey.slice(6);
+				if (currentPosition === 0) currentQueue = queueKey;
 				const subSlideKey = getSlideQueueRelativeKey(config[slideSet].queues[queueKey], queuePositionModifiers[queueKey] || (currentPosition === 0 ? 0 : -1));
 				const subSlide = config[slideSet].definitions[subSlideKey];
 				slides.unshift({ id: subSlideKey, duration: (subSlide.duration || config[slideSet].queues[queueKey].duration || config[slideSet].duration), durationType: subSlide.duration ? 'slide' : (config[slideSet].queues[queueKey].duration ? 'queue' : 'default'), queue: queueKey, position: currentAbsolutePosition + currentPosition, ...subSlide });
@@ -78,6 +80,8 @@ function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 	}
 	
 	queuePositionModifiers = {};
+	if (currentQueue) queuePositionModifiers[currentQueue] = 1;
+
 	while (currentPosition <= end) {
 		const slideKey = getSlideQueueRelativeKey(config[slideSet].queues.main, currentPosition);
 		if (slideKey.startsWith('queue.')) {
@@ -100,11 +104,11 @@ function getSlideRelativeQueue(start, end, slideSet = 'slides') {
 
 function updateKioskSlides() {
 	io.to('kiosk').emit('slides.set', getSlideRelativeQueue(-1, 1));
-	io.to('adminconsole').emit('slides.set', getSlideRelativeQueue(0, 9));
+	io.to('adminconsole').emit('slides.set', getSlideRelativeQueue(0, 19));
 }
 function updateBottombarSlides() {
 	io.to('kiosk').emit('bottombar.set', getSlideRelativeQueue(-1, 1, 'bottombar'));
-	io.to('adminconsole').emit('bottombar.set', getSlideRelativeQueue(0, 9, 'bottombar'));
+	io.to('adminconsole').emit('bottombar.set', getSlideRelativeQueue(0, 19, 'bottombar'));
 }
 
 function advanceSlide(slideSet = 'slides') {
@@ -260,8 +264,8 @@ function checkEvents(events) {
 
 			newEvents.push({
 				startsAt: event.startsAt,
-				title: event.title.slice(0, 64),
-				time: event.time.slice(0, 16)
+				title: event.title.slice(0, 256),
+				time: event.time.slice(0, 32)
 			});
 		}
 
@@ -363,7 +367,7 @@ io.on("connection", socket => {
 			socket.on('slides.next', () => advanceSlide());
 			socket.on('slides.previous', () => previousSlide());
 			socket.on('slides.request', () => {
-				socket.emit('slides.set', getSlideRelativeQueue(0, 9))
+				socket.emit('slides.set', getSlideRelativeQueue(0, 19))
 				if (config.slides.paused) socket.emit('slides.pause');
 			});
 			socket.on('slides.togglepause', () => toggleSlidesPaused());
@@ -371,7 +375,7 @@ io.on("connection", socket => {
 			socket.on('bottombar.next', () => advanceSlide('bottombar'));
 			socket.on('bottombar.previous', () => previousSlide('bottombar'));
 			socket.on('bottombar.request', () => {
-				socket.emit('bottombar.set', getSlideRelativeQueue(0, 9, 'bottombar'));
+				socket.emit('bottombar.set', getSlideRelativeQueue(0, 19, 'bottombar'));
 				if (config.bottombar.paused) socket.emit('bottombar.pause');
 			});
 			socket.on('bottombar.togglepause', () => toggleSlidesPaused('bottombar'));

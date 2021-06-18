@@ -55,11 +55,11 @@ function SlideTable({ type, slides }) {
 
 	return (
 		<Table rowKey="position" dataSource={slides} pagination={false} locale={{ emptyText: 'Loading/None' }} rowClassName={(event, index) => index === 0 ? 'current-row' : ''}>
-			<Table.Column title="Slide" dataIndex="src" width="10rem" render={val => <div style={{ textAlign: 'center' }}><Image src={val} alt="Slide Image" /></div>} />
+			<Table.Column title="Slide" dataIndex="src" width="6rem" render={val => <div style={{ textAlign: 'center', width: '6rem' }}><Image src={val} alt="Slide Image" /></div>} />
 			<Table.Column title="ID" dataIndex="id" width="2rem" />
 			<Table.Column title="Description" dataIndex="description" key="description" />
 			<Table.Column title="Queue" dataIndex="queue" key="queue" render={val => <Tag>{val}</Tag>} />
-			<Table.Column title="Duration" dataIndex="duration" key="duration" render={val => `${val/1000}s`} />
+			<Table.Column title="Duration" dataIndex="duration" key="duration" render={val => `${val/1000}s`} width="2rem" />
 		</Table>
 	);
 }
