@@ -12,10 +12,11 @@ const io = require("socket.io")(httpServer, {
 
 const connectedKiosks = new Map();
 const connectedAdminConsoles = new Map();
+var configUnloaded = false;
 
 // Load configuration
 if (!fs.existsSync('./config.json')) fs.copyFileSync('./defaultConfig.json', './config.json');
-const config = JSON.parse(fs.readFileSync('./config.json'));
+var config = JSON.parse(fs.readFileSync('./config.json'));
 
 var currentAbsoluteSlidePosition = 0;
 var currentAbsoluteBottomBarPosition = 0;
@@ -23,7 +24,7 @@ var advanceSlideTimeout = null;
 var advanceBottomBarTimeout = null;
 
 function saveConfig() {
-	fs.writeFileSync('./config.json', JSON.stringify(config, null, 2));
+	if (!configUnloaded) fs.writeFileSync('./config.json', JSON.stringify(config, null, 2));
 }
 
 // Slides
@@ -443,9 +444,28 @@ io.on("connection", socket => {
 				updateSchedule();
 				return callback();
 			});
+			socket.on('config.setunloaded', status => {
+				if (status === configUnloaded) return;
+
+				if (status) {
+					console.log('Unloading config');
+					configUnloaded = true;
+					console.log('Config unloaded');
+					io.to('adminconsole').emit('config.unloaded', true);
+				}
+				else {
+					console.log('Reloading config');
+					configUnloaded = false;
+					config = JSON.parse(fs.readFileSync('./config.json'));
+					console.log('Config reloaded');
+					io.to('adminconsole').emit('config.unloaded', false);
+				}
+			})
 
 			socket.emit('music.volume', config.music.volume * 100);
 			if (config.music.paused) socket.emit('music.pause');
+
+			if (configUnloaded) socket.emit('config.unloaded', true);
 
 			return callback(true);
 		}

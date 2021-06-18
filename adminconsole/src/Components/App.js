@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Row, Col, Card, Button, Slider, Tabs, message, Radio } from 'antd';
+import { Row, Col, Card, Button, Slider, Tabs, message, Radio, Switch } from 'antd';
 import SlidesPreview from './SlidesPreview';
 import Login from './Login';
 import Schedule from './Schedule'
@@ -10,6 +10,7 @@ function App() {
 	const [ globalMode, setGlobalMode ] = useState('play');
 	const [ localVolume, setLocalVolume ] = useState(5);
 	const [ musicStatus, setMusicStatus ] = useState({ volume: 5, paused: false });
+	const [ configUnloaded, setConfigUnloaded ] = useState(false);
 
 	useEffect(() => {
 		socket.on('connect', () => {
@@ -61,6 +62,7 @@ function App() {
 
 		socket.on('globalmode.change', mode => setGlobalMode(mode));
 		socket.emit('globalmode.request');
+		socket.on('config.unloaded', val => setConfigUnloaded(val));
 
 		return () => {
 			socket.off('connect');
@@ -72,6 +74,7 @@ function App() {
 			socket.off('music.pause');
 			socket.off('music.resume');
 			socket.off('globalmode.change');
+			socket.off('config.setloaded');
 		}
 	}, []);
 
@@ -116,7 +119,13 @@ function App() {
 					</div>
 
 					<Card title="Global Mode" bordered={false}>
-						<Button style={{ float: 'right' }} onClick={openKiosk}>Open Kiosk</Button>
+						<div style={{ float: 'right', display: 'flex', alignItems: 'center' }}>
+							<div style={{ marginRight: '1rem' }}>
+								<label style={{ marginRight: '0.2rem' }}>Unload Config (DANGER)</label>
+								<Switch checked={configUnloaded} onChange={value => socket.emit('config.setunloaded', !!value)} />
+							</div>
+							<Button onClick={openKiosk}>Open Kiosk</Button>
+						</div>
 						<Radio.Group value={globalMode} onChange={event => socket.emit('globalmode.set', event.target.value)}>
 							<Radio.Button value="play">Play</Radio.Button>
 							<Radio.Button value="pause">Pause</Radio.Button>
