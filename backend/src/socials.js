@@ -9,8 +9,8 @@ const { config, saveConfig } = require('./config');
  * @returns {Object[]} Posts
  */
 function getPosts() {
-	return config.bottombar.queues.socials.items.map(id => {
-		const social = config.bottombar.definitions[id];
+	return config.data.bottombar.queues.socials.items.map(id => {
+		const social = config.data.bottombar.definitions[id];
 
 		if (social.type === 'tweet') {
 			return {
@@ -76,14 +76,14 @@ function setPosts(rawInput) {
 			newQueue.push(social.id);
 		}
 
-		for (const [ key, definition ] of Object.entries(config.bottombar.definitions)) {
-			if (definition.type === 'tweet' || definition.type === 'instagrampost') delete config.bottombar.definitions[key];
+		for (const [ key, definition ] of Object.entries(config.data.bottombar.definitions)) {
+			if (definition.type === 'tweet' || definition.type === 'instagrampost') delete config.data.bottombar.definitions[key];
 		}
 
-		config.bottombar.definitions = Object.assign(config.bottombar.definitions, newDefinitions);
-		config.bottombar.queues.socials.items = newQueue;
+		config.data.bottombar.definitions = Object.assign(config.data.bottombar.definitions, newDefinitions);
+		config.data.bottombar.queues.socials.items = newQueue;
 
-		if (config.bottombar.queues.socials.position > newQueue.length) config.bottombar.queues.socials.position = 0;
+		if (config.data.bottombar.queues.socials.position > newQueue.length) config.data.bottombar.queues.socials.position = 0;
 		saveConfig();
 
 		return { success: true };

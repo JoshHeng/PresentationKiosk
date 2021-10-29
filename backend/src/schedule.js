@@ -12,10 +12,10 @@ const maxEventsToShow = 5;
   */
 function update() {
 	io.to('kiosk').emit('schedule.set', {
-		showCountdown: config.globalMode === 'play' && config.schedule.showCountdown,
-		events: config.schedule.events.slice(config.schedule.currentEventIndex, config.schedule.currentEventIndex + maxEventsToShow),
+		showCountdown: config.data.globalMode === 'play' && config.data.schedule.showCountdown,
+		events: config.data.schedule.events.slice(config.data.schedule.currentEventIndex, config.data.schedule.currentEventIndex + maxEventsToShow),
 	});
-	io.to('adminconsole').emit('schedule.set', config.schedule);
+	io.to('adminconsole').emit('schedule.set', config.data.schedule);
 }
 
 /**

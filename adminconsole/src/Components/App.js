@@ -62,7 +62,11 @@ function App() {
 
 		socket.on('globalmode.change', mode => setGlobalMode(mode));
 		socket.emit('globalmode.request');
-		socket.on('config.unloaded', val => setConfigUnloaded(val));
+		socket.on('config.unloaded', val => {
+			message.info(`Config ${val ? 'Unloaded' : 'Reloaded'}`);
+			setConfigUnloaded(val);
+			if (val === false) setTimeout(() => window.location.reload(), 500);
+		});
 
 		return () => {
 			socket.off('connect');

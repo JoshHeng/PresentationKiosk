@@ -10,10 +10,10 @@ const schedule = require('./schedule');
 
 function set(mode) {
 	if (mode !== 'play' && mode !== 'pause' && mode !== 'blank') return;
-	if (config.globalMode === mode) return;
+	if (config.data.globalMode === mode) return;
 
-	const oldMode = config.globalMode;
-	config.globalMode = mode;
+	const oldMode = config.data.globalMode;
+	config.data.globalMode = mode;
 	saveConfig();
 
 	io.to('adminconsole').emit('globalmode.change', mode);
@@ -22,7 +22,7 @@ function set(mode) {
 	switch (mode) {
 	case 'play':
 		if (oldMode === 'blank') io.to('kiosk').emit('slides.cover', false);
-		if (oldMode === 'blank') io.to('kiosk').emit('bottombar.cover', config.bottombar.announcement || false);
+		if (oldMode === 'blank') io.to('kiosk').emit('bottombar.cover', config.data.bottombar.announcement || false);
 		runTogglePause = true;
 		break;
 
@@ -34,7 +34,7 @@ function set(mode) {
 
 	case 'pause':
 		if (oldMode === 'blank') io.to('kiosk').emit('slides.cover', false);
-		if (oldMode === 'blank') io.to('kiosk').emit('bottombar.cover', config.bottombar.announcement || false);
+		if (oldMode === 'blank') io.to('kiosk').emit('bottombar.cover', config.data.bottombar.announcement || false);
 		if (oldMode === 'play') runTogglePause = true;
 		break;
 	}
