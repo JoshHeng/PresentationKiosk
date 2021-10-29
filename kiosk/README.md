@@ -1,6 +1,8 @@
 # Presentation Kiosk - Kiosk
 The kiosk is an unattended **React App** that is shown to event attendees.
 
+![Image](preview.jpg)
+
 ## Deployment
 *This can also be deployed on services such as **Cloudflare Pages** and **Vercel**.*
 

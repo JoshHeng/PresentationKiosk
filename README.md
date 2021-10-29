@@ -1,6 +1,8 @@
 # Presentation Kiosk
 Presentation Kiosk is an application used to display a unattended carousel of slides, social media posts and a schedule for events.
 
+![Image](kiosk/preview.jpg)
+
 This was built for and is currently being used for the [Youth Stem Matters Research Conferences](https://www.youthstem2030.org/ysm/rc), however anybody is welcome to contribute and adapt this to their own purpose.
 
 This project consists of three components:

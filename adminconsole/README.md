@@ -1,6 +1,8 @@
 # Presentation Kiosk - Admin Console
 The admin console is an **React App** that can be used to control the kiosk in realtime.
 
+![Image](preview.jpg)
+
 ## Deployment
 *This can also be deployed on services such as **Cloudflare Pages** and **Vercel**.*
 
