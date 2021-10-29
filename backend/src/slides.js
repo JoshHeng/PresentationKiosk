@@ -249,7 +249,7 @@ function getQueueRelativeKey(queue, relativePosition) {
 }
 
 // Start the slides if not paused
-if (config.globalMode === 'play' && !config.slides.paused) advanceSlideTimeout = setTimeout(advance, config.slides.duration);
-if (config.globalMode === 'play' && !config.bottombar.paused) advanceBottomBarTimeout = setTimeout(() => advance('bottombar'), config.bottombar.duration);
+if (config.data.globalMode === 'play' && !config.data.slides.paused) advanceSlideTimeout = setTimeout(advance, config.data.slides.duration);
+if (config.data.globalMode === 'play' && !config.data.bottombar.paused) advanceBottomBarTimeout = setTimeout(() => advance('bottombar'), config.data.bottombar.duration);
 
 module.exports = { advance, previous, getRelativeQueue, togglePaused };

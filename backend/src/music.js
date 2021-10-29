@@ -36,7 +36,7 @@ function nextSong() {
 
 	io.to('kiosk').emit('music.play', !!config.data.music.paused);
 	setTimeout(() => {
-		io.to('kiosk').emit('music.load', config.music.queue[config.data.music.currentIndex + 1 >= config.data.music.queue.length ? 0 : config.data.music.currentIndex + 1]);
+		io.to('kiosk').emit('music.load', config.data.music.queue[config.data.music.currentIndex + 1 >= config.data.music.queue.length ? 0 : config.data.music.currentIndex + 1]);
 	}, 500);
 }
 
