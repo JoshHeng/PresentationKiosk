@@ -3,9 +3,9 @@
   "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node src/main.js"
   },
   "author": "Josh Heng",
   "license": "MIT",
