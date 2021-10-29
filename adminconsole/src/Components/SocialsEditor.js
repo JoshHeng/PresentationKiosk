@@ -57,7 +57,7 @@ export default function EditableSchedule({ editing, onClose }) {
 
 	return (
 		<Modal title="Edit Socials" visible={editing} onOk={onSubmit} onCancel={onCancel} width={1200}>
-			<Table dataSource={data ? data : []} locale={{ emptyText: 'Loading/None' }} rowKey="id">
+			<Table dataSource={data ? data : []} locale={{ emptyText: 'Loading/None' }} rowKey="id" pagination={false}>
 				<Table.Column title="Type" dataIndex="type" render={value => value === 'twitter' ? <Tag color="blue">Twitter</Tag> : <Tag color="magenta">Instagram</Tag>} width="6rem" />
 				<Table.Column title="Avatar" dataIndex="username" render={(_, social, index) => social.type === 'twitter' && <Space>
 					<Avatar src={social.user.avatar} />

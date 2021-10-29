@@ -3,9 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
-    "start": "node main.js"
+    "start": "node src/main.js",
+    "lint": "eslint . --ext .js"
   },
   "author": "Josh Heng",
   "license": "MIT",
@@ -14,5 +15,9 @@
     "express": "^4.17.1",
     "mongodb": "^3.6.9",
     "socket.io": "^4.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.1.0",
+    "eslint-plugin-jsdoc": "^37.0.3"
   }
 }
