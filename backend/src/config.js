@@ -1,6 +1,6 @@
 /**
  * Handles configuration
- * 
+ *
  */
 const fs = require('fs');
 const { io } = require('./server');
@@ -21,7 +21,7 @@ function saveConfig() {
 /**
  * Unload config
  */
- function unloadConfig() {
+function unloadConfig() {
 	console.log('Unloading config');
 	configUnloaded = true;
 	console.log('Config unloaded');
@@ -31,7 +31,7 @@ function saveConfig() {
 /**
  * Load config
  */
- function loadConfig() {
+function loadConfig() {
 	console.log('Reloading config');
 	configUnloaded = false;
 	config = JSON.parse(fs.readFileSync('./config.json'));
@@ -47,4 +47,4 @@ function isConfigUnloaded() {
 	return configUnloaded;
 }
 
-module.exports = { config, saveConfig, unloadConfig, loadConfig, isConfigUnloaded }
+module.exports = { config, saveConfig, unloadConfig, loadConfig, isConfigUnloaded };

@@ -1,13 +1,13 @@
 /**
- * Handles music 
- * 
+ * Handles music
+ *
  */
 const { io } = require('./server');
 const { config, saveConfig } = require('./config');
 
 /**
  * Toggle whether the music is paused
- * @param {Boolean} toggle Whether to toggle the music 
+ * @param {Boolean} toggle Whether to toggle the music
  */
 function togglePaused(toggle = true) {
 	if (toggle) {
@@ -36,7 +36,7 @@ function nextSong() {
 
 	io.to('kiosk').emit('music.play', !!config.music.paused);
 	setTimeout(() => {
-		io.to('kiosk').emit('music.load', config.music.queue[config.music.currentIndex + 1 >= config.music.queue.length ? 0 : config.music.currentIndex + 1])
+		io.to('kiosk').emit('music.load', config.music.queue[config.music.currentIndex + 1 >= config.music.queue.length ? 0 : config.music.currentIndex + 1]);
 	}, 500);
 }
 

@@ -1,8 +1,8 @@
 /**
  * Handles social media on the bottom bar
- * 
+ *
  */
-const { config } = require('./config');
+const { config, saveConfig } = require('./config');
 
 /**
  * Get all the posts
@@ -12,24 +12,28 @@ function getPosts() {
 	return config.bottombar.queues.socials.items.map(id => {
 		const social = config.bottombar.definitions[id];
 
-		if (social.type === 'tweet') return {
-			id: id,
-			type: 'twitter',
-			tweet: social.tweet,
-			user: social.author,
-		};
-		else return {
-			id: id,
-			type: 'instagram',
-			content: social.content,
-			user: social.author,
-		};
+		if (social.type === 'tweet') {
+			return {
+				id: id,
+				type: 'twitter',
+				tweet: social.tweet,
+				user: social.author,
+			};
+		}
+		else {
+			return {
+				id: id,
+				type: 'instagram',
+				content: social.content,
+				user: social.author,
+			};
+		}
 	});
 }
 
 /**
  * Set the posts from the admin console
- * @param {Object[]} rawInput 
+ * @param {Object[]} rawInput
  * @returns {Object} Result
  */
 function setPosts(rawInput) {
@@ -52,22 +56,22 @@ function setPosts(rawInput) {
 					author: {
 						username: social.user.username.slice(0, 64),
 						name: social.user.name.slice(0, 64),
-						avatar: social.user.avatar.slice(0, 128)
-					}
-				}
+						avatar: social.user.avatar.slice(0, 128),
+					},
+				};
 			}
 			else if (social.type === 'instagram') {
 				if (!social.content) return { error: 'Missing Instagram post content' };
-				
+
 				newDefinitions[social.id] = {
 					type: 'instagrampost',
 					content: social.content.slice(0, 256),
 					author: {
-						username: social.user.username.slice(0, 64)
-					}
-				}
+						username: social.user.username.slice(0, 64),
+					},
+				};
 			}
-			else return { error: 'Invalid post type' };
+			else {return { error: 'Invalid post type' };}
 
 			newQueue.push(social.id);
 		}
@@ -84,10 +88,10 @@ function setPosts(rawInput) {
 
 		return { success: true };
 	}
-	catch(err) {
-		console.log("Couldn't set socials");
+	catch (err) {
+		console.log('Couldn\'t set socials');
 		console.error(err);
-		return { error: 'An error occured' }
+		return { error: 'An error occured' };
 	}
 }
 

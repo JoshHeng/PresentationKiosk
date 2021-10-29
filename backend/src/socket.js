@@ -1,6 +1,6 @@
 /**
  * Handles socket connection
- * 
+ *
  */
 const { io } = require('./server');
 const { config, isConfigUnloaded, unloadConfig, loadConfig, saveConfig } = require('./config');
@@ -10,7 +10,7 @@ const schedule = require('./schedule');
 const socials = require('./socials');
 const globalMode = require('./globalMode');
 
-io.on("connection", socket => {
+io.on('connection', socket => {
 	console.log('Connection Established');
 
 	// Kiosk Login
@@ -34,6 +34,7 @@ io.on("connection", socket => {
 
 			socket.emit('music.volume', config.music.volume, () => {
 				socket.emit('music.load', config.music.queue[config.music.currentIndex], () => {
+					// eslint-disable-next-line
 					socket.emit('music.play', !!(config.music.paused || config.globalMode !== 'play'), () => {
 						socket.emit('music.load', config.music.queue[config.music.currentIndex + 1 >= config.music.queue.length ? 0 : config.music.currentIndex + 1]);
 					});
@@ -41,16 +42,16 @@ io.on("connection", socket => {
 			});
 			socket.on('schedule.request', () => socket.emit('schedule.set', {
 				showCountdown:  config.globalMode === 'play' && config.schedule.showCountdown,
-				events: config.schedule.events.slice(config.schedule.currentEventIndex, config.schedule.currentEventIndex + 5)
+				events: config.schedule.events.slice(config.schedule.currentEventIndex, config.schedule.currentEventIndex + 5),
 			}));
 
 			return callback(true);
 		}
-		else return callback(false);
+		else {return callback(false);}
 	});
 
 	// Admin console login
-	socket.on('login.adminconsole', (password, callback) => {
+	socket.on('login.adminconsole', (password, loginCallback) => {
 		if (password === process.env.ADMIN_CONSOLE_PASSWORD) {
 			socket.join('adminconsole');
 
@@ -58,13 +59,13 @@ io.on("connection", socket => {
 			console.log('Admin Console connected');
 
 			socket.on('globalmode.set', mode => globalMode.set(mode));
-			socket.on('globalmode.request', () => socket.emit('globalmode.change', config.globalMode))
+			socket.on('globalmode.request', () => socket.emit('globalmode.change', config.globalMode));
 
 			// Slides
 			socket.on('slides.next', () => slides.advance());
 			socket.on('slides.previous', () => slides.previous());
 			socket.on('slides.request', () => {
-				socket.emit('slides.set', slides.getRelativeQueue(0, 19))
+				socket.emit('slides.set', slides.getRelativeQueue(0, 19));
 				if (config.slides.paused) socket.emit('slides.pause');
 			});
 			socket.on('slides.togglepause', () => slides.togglePaused());
@@ -104,7 +105,7 @@ io.on("connection", socket => {
 				volume = parseInt(volume);
 				if (isNaN(volume)) return;
 
-				config.music.volume = volume/100;
+				config.music.volume = volume / 100;
 				saveConfig();
 
 				io.to('kiosk').emit('music.volume', config.music.volume);
@@ -133,7 +134,7 @@ io.on("connection", socket => {
 				schedule.update();
 			});
 			socket.on('schedule.edit', (events, callback) => {
-				let check = schedule.validateEvents(events);
+				const check = schedule.validateEvents(events);
 				if (check.error) return callback(check.error || 'An error occured');
 
 				config.schedule.events = check.events;
@@ -154,7 +155,7 @@ io.on("connection", socket => {
 			// Socials
 			socket.on('bottombar.socials.request', callback => callback(socials.getPosts()));
 			socket.on('bottombar.socials.edit', (data, callback) => {
-				let result = socials.setPosts(data);
+				const result = socials.setPosts(data);
 				if (result.error) return callback(result.error || 'An error occured');
 				return callback();
 			});
@@ -164,9 +165,11 @@ io.on("connection", socket => {
 			if (config.music.paused) socket.emit('music.pause');
 			if (isConfigUnloaded()) socket.emit('config.unloaded', true);
 
-			return callback(true);
+			return loginCallback(true);
 		}
-		else return callback(false);
+		else {
+			return loginCallback(false);
+		}
 	});
 
 	// Disconnect
@@ -181,5 +184,5 @@ io.on("connection", socket => {
 		}
 
 		console.log('Socket Disconnected');
-	})
+	});
 });

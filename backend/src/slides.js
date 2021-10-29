@@ -1,6 +1,6 @@
 /**
- * Handles slides 
- * 
+ * Handles slides
+ *
  */
 const { io } = require('./server');
 const { config, saveConfig } = require('./config');
@@ -15,8 +15,8 @@ let advanceBottomBarTimeout = null;
  * @param {String} slideSet
  */
 function update(slideSet = 'slides') {
-	io.to('kiosk').emit('slides.set', getSlideRelativeQueue(-1, 1, slideSet));
-	io.to('adminconsole').emit('slides.set', getSlideRelativeQueue(0, 19, slideSet));
+	io.to('kiosk').emit('slides.set', getRelativeQueue(-1, 1, slideSet));
+	io.to('adminconsole').emit('slides.set', getRelativeQueue(0, 19, slideSet));
 }
 
 
@@ -52,16 +52,16 @@ function advance(slideSet = 'slides') {
 	update(slideSet);
 
 	if (config.globalMode === 'play' && !config[slideSet].paused) {
-		const currentSlide = getSlideRelativeQueue(0, 0, slideSet)[0];
+		const currentSlide = getRelativeQueue(0, 0, slideSet)[0];
 
-		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), currentSlide.duration);
-		else advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
+		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advance('bottombar'), currentSlide.duration);
+		else advanceSlideTimeout = setTimeout(advance, currentSlide.duration);
 	}
 }
 
 /**
  * Go back to the previous slide
- * @param {String} slideSet 
+ * @param {String} slideSet
  */
 function previous(slideSet = 'slides') {
 	if (slideSet === 'slides' && advanceSlideTimeout) {
@@ -73,7 +73,7 @@ function previous(slideSet = 'slides') {
 		advanceSlideTimeout = null;
 	}
 
-	const lastSlide = getSlideRelativeQueue(-1, -1, slideSet)[0];
+	const lastSlide = getRelativeQueue(-1, -1, slideSet)[0];
 	if (lastSlide.queue) {
 		config[slideSet].queues[lastSlide.queue].position -= 1;
 		if (config[slideSet].queues[lastSlide.queue].position < 0) config[slideSet].queues[lastSlide.queue].position = config[slideSet].queues[lastSlide.queue].items.length - 1;
@@ -89,10 +89,10 @@ function previous(slideSet = 'slides') {
 	update(slideSet);
 
 	if (config.globalMode === 'play' && !config[slideSet].paused) {
-		const currentSlide = getSlideRelativeQueue(0, 0, slideSet)[0];
+		const currentSlide = getRelativeQueue(0, 0, slideSet)[0];
 
-		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), currentSlide.duration);
-		else advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
+		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advance('bottombar'), currentSlide.duration);
+		else advanceSlideTimeout = setTimeout(advance, currentSlide.duration);
 	}
 }
 
@@ -116,15 +116,15 @@ function togglePaused(slideSet = 'slides', toggle = true) {
 			clearTimeout(advanceBottomBarTimeout);
 			advanceSlideTimeout = null;
 		}
-		
+
 		if (slideSet === 'slides') io.to('adminconsole').emit('slides.pause');
 		else io.to('adminconsole').emit('bottombar.pause');
 	}
 	else {
-		const currentSlide = getSlideRelativeQueue(0, 0, slideSet)[0];
+		const currentSlide = getRelativeQueue(0, 0, slideSet)[0];
 
-		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), currentSlide.duration);
-		else advanceSlideTimeout = setTimeout(advanceSlide, currentSlide.duration);
+		if (slideSet === 'bottombar') advanceBottomBarTimeout = setTimeout(() => advance('bottombar'), currentSlide.duration);
+		else advanceSlideTimeout = setTimeout(advance, currentSlide.duration);
 
 		if (slideSet === 'slides') io.to('adminconsole').emit('slides.resume');
 		else io.to('adminconsole').emit('bottombar.resume');
@@ -133,9 +133,9 @@ function togglePaused(slideSet = 'slides', toggle = true) {
 
 /**
  * Get the relative slide queue
- * @param {Number} start 
- * @param {Number} end 
- * @param {String} slideSet 
+ * @param {Number} start
+ * @param {Number} end
+ * @param {String} slideSet
  * @returns {Object[]} Queued slides
  */
 function getRelativeQueue(start, end, slideSet = 'slides') {
@@ -147,7 +147,7 @@ function getRelativeQueue(start, end, slideSet = 'slides') {
 	const currentAbsolutePosition = slideSet === 'bottombar' ? currentAbsoluteBottomBarPosition : currentAbsoluteSlidePosition;
 	let queuePositionModifiers = {};
 	let currentQueue;
-	
+
 	if (currentPosition <= 0) {
 		currentPosition = 0;
 		while (currentPosition >= start) {
@@ -170,7 +170,7 @@ function getRelativeQueue(start, end, slideSet = 'slides') {
 
 		currentPosition = 1;
 	}
-	
+
 	queuePositionModifiers = {};
 	if (currentQueue) queuePositionModifiers[currentQueue] = 1;
 
@@ -187,7 +187,7 @@ function getRelativeQueue(start, end, slideSet = 'slides') {
 			const slide = config[slideSet].definitions[slideKey];
 			slides.push({ id: slideKey, duration: (slide.duration || config[slideSet].duration), durationType: slide.duration ? 'slide' : 'default', position: currentAbsolutePosition + currentPosition, ...slide });
 		}
-		
+
 		currentPosition += 1;
 	}
 
@@ -199,9 +199,9 @@ function getRelativeQueue(start, end, slideSet = 'slides') {
  * @param {Object} queue
  * @param {Integer} relativePosition
  */
- function getQueueRelativeKey(queue, relativePosition) {
+function getQueueRelativeKey(queue, relativePosition) {
 	const queueLength = queue.items.length;
-	position = queue.position + relativePosition;
+	let position = queue.position + relativePosition;
 
 	if (queueLength === 0) return null;
 
@@ -215,12 +215,12 @@ function getRelativeQueue(start, end, slideSet = 'slides') {
 			position -= queueLength;
 		}
 	}
-	
+
 	return queue.items[position];
 }
 
 // Start the slides if not paused
-if (config.globalMode === 'play' && !config.slides.paused) advanceSlideTimeout = setTimeout(advanceSlide, config.slides.duration);
-if (config.globalMode === 'play' && !config.bottombar.paused) advanceBottomBarTimeout = setTimeout(() => advanceSlide('bottombar'), config.bottombar.duration);
+if (config.globalMode === 'play' && !config.slides.paused) advanceSlideTimeout = setTimeout(advance, config.slides.duration);
+if (config.globalMode === 'play' && !config.bottombar.paused) advanceBottomBarTimeout = setTimeout(() => advance('bottombar'), config.bottombar.duration);
 
-module.exports = { advance, previous, getRelativeQueue, togglePaused }
+module.exports = { advance, previous, getRelativeQueue, togglePaused };
