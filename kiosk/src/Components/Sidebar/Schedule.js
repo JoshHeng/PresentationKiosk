@@ -23,7 +23,7 @@ export default function Schedule() {
 		<>
 			<WhatsNext nextEvent={events.length > 0 && events[0]} showCountdown={showCountdown} />
 			<div className={styles.schedule}>
-				<h2>Schedule (BST)</h2>
+				<h2>Schedule (GMT)</h2>
 				{ events.length === 0 ? 'None' : 
 					<div>
 						{ events.map(event => <div className={styles.event} key={event.id}>
