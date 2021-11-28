@@ -120,7 +120,7 @@ io.on('connection', socket => {
 			// Schedule
 			socket.on('schedule.request', () => socket.emit('schedule.set', {
 				...config.data.schedule,
-				showSchedule: !config.data.schedule.hideSchedule
+				showSchedule: !config.data.schedule.hideSchedule,
 			}));
 			socket.on('schedule.toggleCountdown', () => {
 				config.data.schedule.showCountdown = !config.data.schedule.showCountdown;
