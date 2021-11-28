@@ -118,7 +118,10 @@ io.on('connection', socket => {
 			socket.on('music.toggle', () => music.togglePaused());
 
 			// Schedule
-			socket.on('schedule.request', () => socket.emit('schedule.set', config.data.schedule));
+			socket.on('schedule.request', () => socket.emit('schedule.set', {
+				...config.data.schedule,
+				showSchedule: !config.data.schedule.hideSchedule
+			}));
 			socket.on('schedule.toggleCountdown', () => {
 				config.data.schedule.showCountdown = !config.data.schedule.showCountdown;
 				saveConfig();
