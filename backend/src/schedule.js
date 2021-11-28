@@ -13,9 +13,13 @@ const maxEventsToShow = 5;
 function update() {
 	io.to('kiosk').emit('schedule.set', {
 		showCountdown: config.data.globalMode === 'play' && config.data.schedule.showCountdown,
+		showSchedule: !config.data.schedule.hideSchedule,
 		events: config.data.schedule.events.slice(config.data.schedule.currentEventIndex, config.data.schedule.currentEventIndex + maxEventsToShow),
 	});
-	io.to('adminconsole').emit('schedule.set', config.data.schedule);
+	io.to('adminconsole').emit('schedule.set', {
+		...config.data.schedule,
+		showSchedule: !config.data.schedule.hideSchedule,
+	});
 }
 
 /**

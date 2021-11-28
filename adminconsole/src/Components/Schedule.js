@@ -18,6 +18,7 @@ export default function Schedule({ disabled }) {
 		<Card title="Schedule" bordered={false}>
 			<div style={{ display: 'flex'}}>
 				<Button style={{ marginRight: '1rem' }} onClick={() => socket.emit('schedule.toggleCountdown')} disabled={disabled}>{ data && data.showCountdown ? 'Hide' : 'Show' } Time Remaining</Button>
+				<Button style={{ marginRight: '1rem' }} onClick={() => socket.emit('schedule.toggleSchedule')} disabled={disabled}>{ data && data.showSchedule ? 'Hide' : 'Show' } Schedule</Button>
 				<Button style={{ marginRight: '0.2rem' }} disabled={disabled || (data && !data.currentEventIndex)} onClick={() => socket.emit('schedule.previous')}>Previous Event</Button>
 				<Button type="primary" disabled={disabled || (data && data.currentEventIndex + 1 >= data.events.length)} onClick={() => socket.emit('schedule.next')}>Next Event</Button>
 				<Button style={{ marginLeft: 'auto' }} onClick={() => setEditing(true)} disabled={disabled}>Edit</Button>

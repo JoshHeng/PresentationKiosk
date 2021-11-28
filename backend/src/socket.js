@@ -42,7 +42,8 @@ io.on('connection', socket => {
 				});
 			});
 			socket.on('schedule.request', () => socket.emit('schedule.set', {
-				showCountdown:  config.data.globalMode === 'play' && config.data.schedule.showCountdown,
+				showCountdown: config.data.globalMode === 'play' && config.data.schedule.showCountdown,
+				showSchedule: !config.data.schedule.hideSchedule,
 				events: config.data.schedule.events.slice(config.data.schedule.currentEventIndex, config.data.schedule.currentEventIndex + 5),
 			}));
 
@@ -120,6 +121,11 @@ io.on('connection', socket => {
 			socket.on('schedule.request', () => socket.emit('schedule.set', config.data.schedule));
 			socket.on('schedule.toggleCountdown', () => {
 				config.data.schedule.showCountdown = !config.data.schedule.showCountdown;
+				saveConfig();
+				schedule.update();
+			});
+			socket.on('schedule.toggleSchedule', () => {
+				config.data.schedule.hideSchedule = !config.data.schedule.hideSchedule;
 				saveConfig();
 				schedule.update();
 			});

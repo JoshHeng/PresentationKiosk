@@ -101,6 +101,7 @@
 			}
 		],
 		"showCountdown": true,
+		"hideSchedule": false,
 		"currentEventIndex": 0
 	},
 	"music": {

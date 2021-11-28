@@ -6,11 +6,13 @@ import socket from '../../socket';
 export default function Schedule() {
 	const [ events, setEvents ] = useState([]);
 	const [ showCountdown, setShowCountdown ] = useState(false);
+	const [ showSchedule, setShowSchedule ] = useState(true);
 
 	useEffect(() => {
 		socket.on('schedule.set', data => {
 			setShowCountdown(data.showCountdown);
 			setEvents(data.events);
+			setShowSchedule(data.showSchedule);
 		});
 		socket.emit('schedule.request');
 
@@ -21,12 +23,12 @@ export default function Schedule() {
 
 	return (
 		<>
-			<WhatsNext nextEvent={events.length > 0 && events[0]} showCountdown={showCountdown} />
+			<WhatsNext nextEvent={events.length > 0 && events[0]} showCountdown={showCountdown} showSchedule={showSchedule} />
 			<div className={styles.schedule}>
-				<h2>Schedule (GMT)</h2>
+				<h2 style={{ opacity: showSchedule ? '100%' : 0 }}>Schedule (GMT)</h2>
 				{ events.length === 0 ? 'None' : 
 					<div>
-						{ events.map(event => <div className={styles.event} key={event.id}>
+						{ events.map(event => <div className={styles.event} key={event.id} style={{ opacity: showSchedule ? '100%' : 0 }}>
 							<strong>{ event.time }</strong><br />{ event.title }
 						</div>)}
 					</div>
