@@ -19,6 +19,7 @@ function App() {
 				socket.emit('login.adminconsole', localStorage.getItem('adminconsolepassword'), success => {
 					if (success) {
 						setLoggedIn(2);
+						socket.emit('globalmode.request');
 						message.success('Connected to Server');
 					}
 					else {
@@ -61,7 +62,6 @@ function App() {
 		}));
 
 		socket.on('globalmode.change', mode => setGlobalMode(mode));
-		socket.emit('globalmode.request');
 		socket.on('config.unloaded', val => {
 			message.info(`Config ${val ? 'Unloaded' : 'Reloaded'}`);
 			setConfigUnloaded(val);
