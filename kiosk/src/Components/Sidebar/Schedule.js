@@ -25,7 +25,7 @@ export default function Schedule() {
 		<>
 			<WhatsNext nextEvent={events.length > 0 && events[0]} showCountdown={showCountdown} showSchedule={showSchedule} />
 			<div className={styles.schedule}>
-				<h2 style={{ opacity: showSchedule ? '100%' : 0 }}>Schedule (GMT)</h2>
+				<h2 style={{ opacity: showSchedule ? '100%' : 0 }}>Schedule (BST)</h2>
 				{ events.length === 0 ? 'None' : 
 					<div>
 						{ events.map(event => <div className={styles.event} key={event.id} style={{ opacity: showSchedule ? '100%' : 0 }}>
